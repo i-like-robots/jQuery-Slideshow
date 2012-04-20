@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" />
+
+	<title>jQuery Slideshow</title>
+
+
+	<link rel="stylesheet" href="css/example.css" />
+	<link rel="stylesheet" href="css/slideshow.css" />
+
+	<!--
+	jQuery Slideshow by Matt Hinchliffe <http://www.maketea.co.uk>
+	Find out more at GitHub <http://github.com/i-like-robots/jQuery-Slideshow>
+	-->
+
+</head>
+<body>
+
+	<div id="container">
+
+		<section class="introduction">
+			<h1>jQuery Slideshow</h1>
+			<p>
+				<a href="http://github.com/i-like-robots/jQuery-Slideshow">jQuery Slideshow</a> is a performant and
+				flexible slideshow/carousel plugin with support for different (and extendable) transitions and swipe
+				left/right touch gestures.
+			</p>
+		</section>
+
+		<hr />
+
+		<section class="examples">
+			<h2>Example</h2>
+
+			<div class="slideshow" data-loop="true">
+				<ul class="carousel">
+					<li class="slide slide-1">
+						<img src="http://placebox.es/448/200/d97ef2/f5f5f5" alt="" width="448" height="200" />
+					</li>
+					<li class="slide slide-2">
+						<img src="http://placebox.es/448/200/50ac3d/f5f5f5" alt="" width="448" height="200" />
+					</li>
+					<li class="slide slide-3">
+						<img src="http://placebox.es/448/200/0a77bb/f5f5f5" alt="" width="448" height="200" />
+					</li>
+				</ul>
+			</div>
+
+			<label for="transition">Change the transition:</label>
+			<select name="transition" id="transition">
+				<option selected>scroll</option>
+				<option>crossfade</option>
+			</select>
+
+			<!-- code -->
+			<pre><code><span class="comment">// Create slideshow instances</span>
+var $s = $('.slideshow').slides(opts);
+
+<span class="comment">// Access an instances API</span>
+var api = $s.eq(0).data('slides');</code></pre>
+			<!--/ code  -->
+
+		</section>
+
+		<hr />
+
+		<section class="options">
+			<h3>Options</h3>
+			<p>
+				Options can be specified via the standard jQuery plugin interface or as data attributes on the target
+				element itself.
+			</p>
+			<dl>
+				<dt>auto</dt>
+				<dd>
+					Autoplay timeout in milliseconds. Set to false for no autoplay. Default: <code>6000</code>.
+				</dd>
+				<dt>speed</dt>
+				<dd>
+					Animation speed between slides in milliseconds. Default: <code>600</code>.
+				</dd>
+				<dt>carousel</dt>
+				<dd>
+					Selector for the carousel element. Default: <code>.carousel</code>.
+				</dd>
+				<dt>items</dt>
+				<dd>
+					Selector for carousel items. Default: <code>.slide</code>.
+				</dd>
+				<dt>easing</dt>
+				<dd>
+					Animation easing for single transition. Default: <code>swing</code>.
+				</dd>
+				<dt>easeIn</dt>
+				<dd>
+					Animation easing on fade in. Default: <code>swing</code>.
+				</dd>
+				<dt>easeOut</dt>
+				<dd>
+					Animation easing on fade out. Default: <code>swing</code>.
+				</dd>
+				<dt>pagination</dt>
+				<dd>
+					Render pagination. Default: <code>true</code>.
+				</dd>
+				<dt>skip</dt>
+				<dd>
+					Render next/previous skip buttons. Default: <code>true</code>.
+				</dd>
+				<dt>queue</dt>
+				<dd>
+					Allow .to() method while animations are queued. Default: <code>false</code>.
+				</dd>
+				<dt>loop</dt>
+				<dd>
+					Allow slideshow to loop. Default: <code>false</code>.
+				</dd>
+				<dt>transition</dt>
+				<dd>
+					Specify transition. Default: <code>scroll</code>.
+				</dd>
+				<dt>gestures</dt>
+				<dd>
+					Allow touch swipe events to control previous/next. Default: <code>true</code>.
+				</dd>
+				<dt>onupdate</dt>
+				<dd>
+					A callback function to execute on update event. Default: <code>false</code>.
+				</dd>
+			</dl>
+		</section>
+
+		<hr />
+
+		<section class="api">
+			<h4>Public methods</h4>
+			<dl>
+				<dt>.hasNext()</dt>
+				<dd>
+					Are there any slides after current item (ignores loop). Returns <code>boolean</code>.
+				</dd>
+				<dt>.hasPrevious()</dt>
+				<dd>
+					Are there any slides previous to current item (ignores loop). Returns <code>boolean</code>.
+				</dd>
+				<dt>.next()</dt>
+				<dd>
+					Go to the next slide.
+				</dd>
+				<dt>.previous()</dt>
+				<dd>
+					Go to previous slide.
+				</dd>
+				<dt>.to(index)</dt>
+				<dd>
+					Go to slide. <var>Index</var> Slide position.
+				</dd>
+				<dt>.redraw([transition])</dt>
+				<dd>
+					Redraw the carousel. <var>Transition</var> New transition style.
+				</dd>
+			</dl>
+		</section>
+
+	</div>
+
+	<a href="https://github.com/i-like-robots/jQuery-Slideshow">
+		<img style="position:absolute;top:0;right:0;border:0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" />
+	</a>
+
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	<script src="js/slideshow.js"></script>
+	<script>
+		$(function()
+		{
+			// Create slideshow instances
+			var $s = $('.slideshow').slides(),
+
+			    // Access an instances API
+			    api = $s.eq(0).data('slides');
+
+			// Transition select
+			$('select[name=transition]').on('change', function()
+			{
+				api.redraw( this.value );
+			});
+		});
+	</script>
+
+</body>
+</html>

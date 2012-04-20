@@ -1,12 +1,12 @@
 ﻿/**
  * @name        Slides
  * @author      Matt Hinchliffe <http://www.maketea.co.uk>
- * @modified    04/04/2012
- * @version     0.9.7
- * @description Simple slideshow
+ * @modified    20/04/2012
+ * @version     1.0.0
+ * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
- *     <ul class="slides">
+ *     <ul class="carousel">
  *         <li class="slide"><a href="#">Option 1</a></li>
  *         <li class="slide"><a href="#">Option 2</a></li>
  *     </ul>
@@ -24,6 +24,8 @@
 	var defaults = {
 		auto: 6000,               // Autoplay timeout in milliseconds. Set to false for no autoplay.
 		speed: 600,               // Animation speed between slides in milliseconds.
+		carousel: '.carousel',    // Selector for carousel element
+		items: '.slide',          // Selector for carousel items
 		easing: 'swing',          // Animation easing for single transition
 		easeIn: 'swing',          // Animation easing on fade in.
 		easeOut: 'swing',         // Animation easing on fade out.
@@ -36,18 +38,18 @@
 		onupdate: undefined       // A callback function to execute on update event.
 	};
 
-	var Slides = function($target, options)
+	$.Slides = function($target, options)
 	{
 		this.opts = $.extend({}, defaults, options);
 		this.target = $target[0];
-		this.$slideshow = $target;
+		this.$target = $target;
 
 		this._init();
 
 		return this;
 	};
 
-	Slides.prototype = {
+	$.Slides.prototype = {
 
 		/**
 		 * Instantiate
@@ -58,10 +60,10 @@
 		{
 			var self = this;
 
-			this.$slidelist = this.$slideshow.children('.slides');
-			this.$slides = this.$slidelist.find('.slide'); // We can't use more efficient .children() treewalker because of WYSIWYG
+			this.$carousel = this.$target.children( this.opts.carousel );
+			this.$items = this.$carousel.find( this.opts.items ); // We can't use more efficient .children() treewalker because of WYSIWYG
 
-			this.count = this.$slides.length;
+			this.count = this.$items.length;
 			this.current = 0;
 
 			// Only run if there is more than 1 slide
@@ -71,7 +73,7 @@
 			}
 
 			// Setup styles
-			this.$slideshow.css({
+			this.$target.css({
 				position: 'relative',
 				overflow: 'hidden'
 			});
@@ -85,40 +87,44 @@
 
 				for (var i = 0; i < this.count; i++)
 				{
-					$('' +
+					$(
 						'<li class="' + ( i === this.current ? 'selected' : '' ) + '">' +
 							'<a data-slides="' + i + '" href="">' + i + '</a>' +
 						'</li>'
-					).appendTo( this.$pagination );
+					)
+					.appendTo( this.$pagination );
 				}
 
-				this.$pagination.appendTo( this.$slideshow );
+				this.$pagination.appendTo( this.$target );
 			}
 
 			if (this.opts.skip)
 			{
-				this.$next = $('<a class="slides-next" data-slides="next" href="">Next</a>').appendTo( this.$slideshow );
-				this.$previous = $('<a class="slides-previous" data-slides="previous" href="">Previous</a>').appendTo( this.$slideshow );
+				this.$next = $('<a class="slides-next" data-slides="next" href="">Next</a>').appendTo( this.$target );
+				this.$previous = $('<a class="slides-previous" data-slides="previous" href="">Previous</a>').appendTo( this.$target );
 			}
 
 			// Events
 			if (this.opts.pagination || this.opts.skip)
 			{
-				this.$slideshow.on('click.slides', '[data-slides]', function(e)
+				this.$target.on('click.slides', '[data-slides]', function(e)
 				{
+					e.preventDefault();
+
 					if ( ! $(this).hasClass('disabled'))
 					{
 						self.to( $(this).data('slides') );
 
 						// Stop autoplay
-						self.timeout && clearTimeout( self.timeout );
+						if (self.timeout)
+						{
+							clearTimeout( self.timeout );
+						}
 					}
-
-					e.preventDefault();
 				});
 			}
 
-			this.$slideshow.on('update.slides', function()
+			this.$target.on('update.slides', function()
 			{
 				self._update();
 			});
@@ -154,25 +160,28 @@
 						{
 							if (Math.abs(self.t.x1 - self.t.x2) >= Math.abs(self.t.y1 - self.t.y2))
 							{
-								return self.t.x1 - self.t.x2 > 0 ? 'Left' : 'Right';
+								return self.t.x1 - self.t.x2 > 0 ? 'left' : 'right';
 							}
 							else
 							{
-								return self.t.y1 - self.t.y2 > 0 ? 'Up' : 'Down';
+								return self.t.y1 - self.t.y2 > 0 ? 'up' : 'down';
 							}
 						}();
 
-						if (dir === 'Left')
+						if ( dir === 'left' )
 						{
 							self.to(self.current + 1);
 						}
-						else if (dir === 'Right')
+						else if ( dir === 'right' )
 						{
 							self.to(self.current - 1);
 						}
 
 						// Stop autoplay
-						self.timeout && clearTimeout(self.timeout);
+						if (self.timeout)
+						{
+							clearTimeout(self.timeout);
+						}
 					}
 				}, false);
 			}
@@ -224,7 +233,7 @@
 			// Callback
 			if (this.opts.onupdate)
 			{
-				this.opts['onupdate'](this.current);
+				this.opts.onupdate(this.current);
 			}
 		},
 
@@ -234,7 +243,7 @@
 				{
 					var self = this;
 
-					this.$slides
+					this.$items
 						.css({ // Avoid setting absolute positioning as it means setting a height of a parent element
 							top: 0,
 							left: 0
@@ -247,37 +256,45 @@
 				},
 				execute: function(to)
 				{
-					var $next = this.$slides.eq(to).css('position', 'absolute').fadeIn(this.opts.speed, this.opts.easeIn);
+					var $next = this.$items.eq(to).css('position', 'absolute').fadeIn(this.opts.speed, this.opts.easeIn);
 
-					this.$slides.eq(this.current).fadeOut(this.opts.speed, this.opts.easeOut, function()
+					this.$items.eq(this.current).fadeOut(this.opts.speed, this.opts.easeOut, function()
 					{
 						$next.css('position', 'static');
 					});
 				},
 				teardown: function()
 				{
-					this.$slides.removeAttr('style');
+					this.$items.removeAttr('style');
 				}
 			},
 			scroll: {
 				setup: function()
 				{
-					this.$slidelist.css({
+					this.$items.css('float', 'left');
+
+					var slide = this.$items.outerWidth(true);
+
+					this.$carousel.css({
 						position: 'relative',
 						left: 0,
-						minWidth: this.$slides.outerWidth(true) * this.count // setting width property does not work on iOS 4
+						minWidth: Math.ceil(slide * this.count) // setting width property does not work on iOS 4
 					});
 
-					this.$slides.css('float', 'left');
+					this.realcount = this.count;
+					this.count = this.count - Math.ceil(this.$target.width() / slide) + 1;
 				},
 				execute: function(to)
 				{
-					this.$slidelist.animate({ left: this.$slides.eq( to ).position().left * -1 }, this.opts.speed, this.opts.easing);
+					this.$carousel.animate({ left: this.$items.eq( to ).position().left * -1 }, this.opts.speed, this.opts.easing);
 				},
 				teardown: function()
 				{
-					this.$slidelist.removeAttr('style');
-					this.$slides.removeAttr('style');
+					this.count = this.realcount;
+					delete this.realcount;
+
+					this.$carousel.removeAttr('style');
+					this.$items.removeAttr('style');
 				}
 			}
 		},
@@ -308,7 +325,7 @@
 		to: function(x)
 		{
 			// If current slide is animating ignore the request,
-			if ( ! this.opts.queue && this.$slides.queue('fx').length ) // <http://jsperf.com/animated-pseudo-selector/3>
+			if ( ! this.opts.queue && this.$items.queue('fx').length ) // <http://jsperf.com/animated-pseudo-selector/3>
 			{
 				return;
 			}
@@ -350,13 +367,21 @@
 				this.current = x;
 			}
 
-			this.$slideshow.trigger('update');
+			this.$target.trigger('update');
 		},
 
 		// Transition redraw
-		redraw: function()
+		redraw: function(transition)
 		{
 			this._transitions[ this.opts.transition ].teardown.call(this);
+
+			if (transition)
+			{
+				this.opts.transition = transition;
+			}
+
+			this.current = 0;
+
 			this._transitions[ this.opts.transition ].setup.call(this);
 		}
 	};
@@ -370,7 +395,7 @@
 
 			if ( ! $this.data('slides') )
 			{
-				$.data(this, 'slides', new Slides($this, $.extend({}, options, $this.data())) );
+				$.data(this, 'slides', new $.Slides($this, $.extend({}, options, $this.data())) );
 			}
 		});
 	};
