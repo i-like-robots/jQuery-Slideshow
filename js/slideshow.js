@@ -2,7 +2,7 @@
  * @name        Slides
  * @author      Matt Hinchliffe <http://www.maketea.co.uk>
  * @modified    20/04/2012
- * @version     1.0.0
+ * @version     1.0.1
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -13,7 +13,7 @@
  * </div>
  *
  * @example
- * var slideshow = $('.slideshow').slides(opts).data('slides');
+ * var slideshow = $('.slideshow').slides(opts).eq(0).data('slides');
  */
 
 /*jshint trailing:true, smarttabs:true */
@@ -24,17 +24,17 @@
 	var defaults = {
 		auto: 6000,               // Autoplay timeout in milliseconds. Set to false for no autoplay.
 		speed: 600,               // Animation speed between slides in milliseconds.
-		carousel: '.carousel',    // Selector for carousel element
+		carousel: '.carousel',    // Selector for the carousel element
 		items: '.slide',          // Selector for carousel items
 		easing: 'swing',          // Animation easing for single transition
 		easeIn: 'swing',          // Animation easing on fade in.
 		easeOut: 'swing',         // Animation easing on fade out.
-		pagination: true,         // Display pagination.
-		skip: true,               // Display next/previous skip buttons.
+		pagination: true,         // Render pagination.
+		skip: true,               // Render next/previous skip buttons.
 		queue: false,             // Allow .to() method while animations are queued.
 		loop: false,              // Allow slideshow to loop.
 		transition: 'scroll',     // Specify transition.
-		gestures: true,           // Allow swipe events to control previous/next.
+		gestures: true,           // Allow touch swipe events to control previous/next.
 		onupdate: undefined       // A callback function to execute on update event.
 	};
 
@@ -233,7 +233,7 @@
 			// Callback
 			if (this.opts.onupdate)
 			{
-				this.opts.onupdate(this.current);
+				this.opts.onupdate.call(this, this.current);
 			}
 		},
 
@@ -381,6 +381,7 @@
 			}
 
 			this.current = 0;
+			this.$target.trigger('update');
 
 			this._transitions[ this.opts.transition ].setup.call(this);
 		}
