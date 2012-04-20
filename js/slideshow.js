@@ -2,7 +2,7 @@
  * @name        Slides
  * @author      Matt Hinchliffe <http://www.maketea.co.uk>
  * @modified    20/04/2012
- * @version     1.0.1
+ * @version     1.0.2
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -38,11 +38,11 @@
 		onupdate: undefined       // A callback function to execute on update event.
 	};
 
-	$.Slides = function($target, options)
+	$.Slides = function(target, options)
 	{
-		this.opts = $.extend({}, defaults, options);
-		this.target = $target[0];
-		this.$target = $target;
+		this.target = target;
+		this.$target = $(target);
+		this.opts = $.extend({}, defaults, options, this.$target.data());
 
 		this._init();
 
@@ -186,9 +186,9 @@
 				}, false);
 			}
 
-			// Autoplay
 			this.to(this.current);
 
+			// Autoplay
 			if (this.opts.auto)
 			{
 				this.timeout = setInterval(function()
@@ -390,13 +390,11 @@
 	// jQuery plugin wrapper
 	$.fn.slides = function(options)
 	{
-		return this.each(function()
+		return this.each(function(i)
 		{
-			var $this = $(this);
-
-			if ( ! $this.data('slides') )
+			if ( ! $.data(this, 'slides') )
 			{
-				$.data(this, 'slides', new $.Slides($this, $.extend({}, options, $this.data())) );
+				$.data(this, 'slides', new $.Slides(this, options) );
 			}
 		});
 	};
