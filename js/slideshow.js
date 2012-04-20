@@ -2,7 +2,7 @@
  * @name        Slides
  * @author      Matt Hinchliffe <http://www.maketea.co.uk>
  * @modified    20/04/2012
- * @version     1.0.2
+ * @version     1.0.3
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -61,7 +61,7 @@
 			var self = this;
 
 			this.$carousel = this.$target.children( this.opts.carousel );
-			this.$items = this.$carousel.find( this.opts.items ); // We can't use more efficient .children() treewalker because of WYSIWYG
+			this.$items = this.$carousel.children( this.opts.items );
 
 			this.count = this.$items.length;
 			this.current = 0;
@@ -89,7 +89,7 @@
 				{
 					$(
 						'<li class="' + ( i === this.current ? 'selected' : '' ) + '">' +
-							'<a data-slides="' + i + '" href="">' + i + '</a>' +
+							'<a data-slides="' + i + '" href="">' + (i + 1) + '</a>' +
 						'</li>'
 					)
 					.appendTo( this.$pagination );
@@ -380,10 +380,9 @@
 				this.opts.transition = transition;
 			}
 
-			this.current = 0;
-			this.$target.trigger('update');
-
 			this._transitions[ this.opts.transition ].setup.call(this);
+
+			this.to(0);
 		}
 	};
 
