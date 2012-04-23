@@ -1,8 +1,8 @@
 ﻿/**
  * @name        Slides
  * @author      Matt Hinchliffe <http://www.maketea.co.uk>
- * @modified    20/04/2012
- * @version     1.0.3
+ * @modified    23/04/2012
+ * @version     1.1.0
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -42,7 +42,7 @@
 	{
 		this.target = target;
 		this.$target = $(target);
-		this.opts = $.extend({}, defaults, options, this.$target.data());
+		this.opts = $.extend(defaults, options, this.$target.data());
 
 		this._init();
 
@@ -73,10 +73,8 @@
 			}
 
 			// Setup styles
-			this.$target.css({
-				position: 'relative',
-				overflow: 'hidden'
-			});
+			this.$target.css('position', 'relative');
+			this.$carousel.wrap('<div style="overflow:hidden;" />');
 
 			this._transitions[ this.opts.transition ].setup.call(this);
 
@@ -87,12 +85,9 @@
 
 				for (var i = 0; i < this.count; i++)
 				{
-					$(
-						'<li class="' + ( i === this.current ? 'selected' : '' ) + '">' +
-							'<a data-slides="' + i + '" href="">' + (i + 1) + '</a>' +
-						'</li>'
-					)
-					.appendTo( this.$pagination );
+					$('<li class="' + ( i === this.current ? 'selected' : '' ) + '">' +
+						'<a data-slides="' + i + '" href="">' + (i + 1) + '</a>' +
+					  '</li>').appendTo( this.$pagination );
 				}
 
 				this.$pagination.appendTo( this.$target );
@@ -111,9 +106,11 @@
 				{
 					e.preventDefault();
 
-					if ( ! $(this).hasClass('disabled'))
+					var $this = $(this);
+
+					if ( ! $this.hasClass('disabled'))
 					{
-						self.to( $(this).data('slides') );
+						self.to( $this.data('slides') );
 
 						// Stop autoplay
 						if (self.timeout)
@@ -271,14 +268,12 @@
 			scroll: {
 				setup: function()
 				{
-					this.$items.css('float', 'left');
-
-					var slide = this.$items.outerWidth(true);
+					var slide = this.$items.css('float', 'left').outerWidth(true);
 
 					this.$carousel.css({
 						position: 'relative',
 						left: 0,
-						minWidth: Math.ceil(slide * this.count) // setting width property does not work on iOS 4
+						minWidth: slide * this.count // setting width property does not work on iOS 4
 					});
 
 					this.realcount = this.count;
