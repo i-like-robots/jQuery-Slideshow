@@ -2,7 +2,7 @@
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
  * @modified    24/04/2012
- * @version     1.1.1
+ * @version     1.1.2
  */
 
 /**
@@ -45,7 +45,7 @@
 	{
 		this.target = target;
 		this.$target = $(target);
-		this.opts = $.extend({}, defaults, options, this.$target.data()); // Crate a new options object for each instance
+		this.opts = $.extend({}, defaults, options, this.$target.data()); // Create a new options object for each instance
 
 		this._init();
 
@@ -387,7 +387,7 @@
 	// jQuery plugin wrapper
 	$.fn.slides = function(options)
 	{
-		return this.each(function(i)
+		return this.each(function()
 		{
 			if ( ! $.data(this, 'slides') )
 			{
