@@ -1,8 +1,11 @@
-﻿/**
- * @name        Slides
- * @author      Matt Hinchliffe <http://www.maketea.co.uk>
- * @modified    23/04/2012
- * @version     1.1.0
+﻿/*!
+ * @name        jQuery Slideshow
+ * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
+ * @modified    24/04/2012
+ * @version     1.1.1
+ */
+
+/**
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -42,7 +45,7 @@
 	{
 		this.target = target;
 		this.$target = $(target);
-		this.opts = $.extend(defaults, options, this.$target.data());
+		this.opts = $.extend({}, defaults, options, this.$target.data()); // Crate a new options object for each instance
 
 		this._init();
 
