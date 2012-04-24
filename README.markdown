@@ -1,5 +1,5 @@
 # jQuery Slideshow
-[jQuery Slideshow][1] is a performant and flexible slideshow/carousel plugin with support for different (and extendable) transitions and swipe left/right touch gestures.
+[jQuery Slideshow][1] is a performant and flexible slideshow/carousel plugin with support for different (and extendable) transitions and swipe left/right touch gestures. Less than 4KB minified and under 2KB with gzip compression.
 
 ## Dependencies
 
