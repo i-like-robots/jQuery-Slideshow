@@ -1,11 +1,8 @@
-﻿/*!
+﻿/**
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    24/04/2012
+ * @modified    10/05/2012
  * @version     1.1.2
- */
-
-/**
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -38,6 +35,7 @@
 		loop: false,              // Allow slideshow to loop.
 		transition: 'scroll',     // Specify transition.
 		gestures: true,           // Allow touch swipe events to control previous/next.
+
 		onupdate: undefined       // A callback function to execute on update event.
 	};
 
