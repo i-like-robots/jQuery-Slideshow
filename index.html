@@ -74,33 +74,41 @@ var api = $s.eq(0).data('slides');</code></pre>
 				element itself.
 			</p>
 			<dl>
+				<dt>carousel</dt>
+				<dd>
+					Selector for the carousel element. Default: <code>".carousel"</code>.
+				</dd>
+				<dt>items</dt>
+				<dd>
+					Selector for carousel items. Default: <code>".slide"</code>.
+				</dd>
 				<dt>auto</dt>
 				<dd>
 					Autoplay timeout in milliseconds. Set to false for no autoplay. Default: <code>6000</code>.
 				</dd>
-				<dt>speed</dt>
+				<dt>autostop</dt>
 				<dd>
-					Animation speed between slides in milliseconds. Default: <code>600</code>.
+					Stop autoplay when user manually changes slide. Default: <code>true</code>.
 				</dd>
-				<dt>carousel</dt>
+				<dt>hoverPause</dt>
 				<dd>
-					Selector for the carousel element. Default: <code>.carousel</code>.
-				</dd>
-				<dt>items</dt>
-				<dd>
-					Selector for carousel items. Default: <code>.slide</code>.
+					Pause autoplay on hover. Default: <code>false</code>.
 				</dd>
 				<dt>easing</dt>
 				<dd>
-					Animation easing for single transition. Default: <code>swing</code>.
+					Animation easing for single transition. Default: <code>"swing"</code>.
 				</dd>
 				<dt>easeIn</dt>
 				<dd>
-					Animation easing on fade in. Default: <code>swing</code>.
+					Animation easing on fade in. Default: <code>"swing"</code>.
 				</dd>
 				<dt>easeOut</dt>
 				<dd>
-					Animation easing on fade out. Default: <code>swing</code>.
+					Animation easing on fade out. Default: <code>"swing"</code>.
+				</dd>
+				<dt>speed</dt>
+				<dd>
+					Animation speed between slides in milliseconds. Default: <code>600</code>.
 				</dd>
 				<dt>pagination</dt>
 				<dd>
@@ -110,9 +118,9 @@ var api = $s.eq(0).data('slides');</code></pre>
 				<dd>
 					Render next/previous skip buttons. Default: <code>true</code>.
 				</dd>
-				<dt>queue</dt>
+				<dt>jumpQueue</dt>
 				<dd>
-					Allow .to() method while animations are queued. Default: <code>false</code>.
+					Allow .to() method while animations are queued. Default: <code>true</code>.
 				</dd>
 				<dt>loop</dt>
 				<dd>
@@ -120,7 +128,7 @@ var api = $s.eq(0).data('slides');</code></pre>
 				</dd>
 				<dt>transition</dt>
 				<dd>
-					Specify transition. Default: <code>scroll</code>.
+					Specify transition. Default: <code>"scroll"</code>.
 				</dd>
 				<dt>gestures</dt>
 				<dd>
