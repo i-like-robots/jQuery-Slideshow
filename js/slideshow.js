@@ -1,8 +1,8 @@
 ﻿/**
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    15/05/2012
- * @version     1.2.0
+ * @modified    21/05/2012
+ * @version     1.2.1
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -55,7 +55,6 @@
 
 		/**
 		 * Instantiate
-		 *
 		 * @description Setup the structures on first run
 		 */
 		_init: function()
@@ -113,20 +112,7 @@
 
 					if ( ! $this.hasClass('disabled') )
 					{
-						self.to( $this.data('slides') );
-
-						// Stop autoplay
-						if (self.timeout)
-						{
-							if ( self.opts.autostop )
-							{
-								self.stop();
-							}
-							else
-							{
-								self.play();
-							}
-						}
+						self.to( $this.data('slides'), true );
 					}
 				});
 			}
@@ -170,51 +156,41 @@
 							{
 								return self.t.x1 - self.t.x2 > 0 ? 'left' : 'right';
 							}
-							else
-							{
-								return self.t.y1 - self.t.y2 > 0 ? 'up' : 'down';
-							}
 						}();
 
 						if ( dir === 'left' )
 						{
-							self.to(self.current + 1);
+							self.to('next', true);
 						}
 						else if ( dir === 'right' )
 						{
-							self.to(self.current - 1);
-						}
-
-						// Stop autoplay
-						if ( self.timeout )
-						{
-							if ( self.opts.autostop )
-							{
-								self.stop();
-							}
-							else
-							{
-								self.play();
-							}
+							self.to('previous', true);
 						}
 					}
 				}, false);
 			}
 
+			// Start up
 			this.to(this.current);
 
-			// Autoplay
+			// Init autoplay
 			if ( this.opts.auto )
 			{
 				if ( this.opts.hoverPause )
 				{
 					this.$target.hover(function()
 					{
-						self.stop();
+						if ( ! self.stopped )
+						{
+							self.pause();
+						}
 					},
 					function()
 					{
-						self.play();
+						if ( self.paused )
+						{
+							self.play();
+						}
 					});
 				}
 
@@ -222,6 +198,10 @@
 			}
 		},
 
+		/**
+		 * Update
+		 * @description Redraw controls
+		 */
 		_update: function()
 		{
 			if ( this.opts.pagination )
@@ -261,7 +241,16 @@
 			}
 		},
 
+		/**
+		 * Transitions
+		 * @description Transitions consist of 3 methods:
+		 *              1) Setup - Code to setup styles and variables for the transition.
+		 *              2) Execute - Code to perform the transition between 2 slides.
+		 *              3) Teardown - Remove styles and variables created by methods 1 and 2.
+		 */
 		_transitions: {
+
+			// Cross fade
 			crossfade: {
 				setup: function()
 				{
@@ -297,6 +286,8 @@
 					this.$items.stop(true, true).removeAttr('style');
 				}
 			},
+
+			// Scroll
 			scroll: {
 				setup: function()
 				{
@@ -326,30 +317,52 @@
 			}
 		},
 
+		/**
+		 * Has next
+		 * @description Are there any slides after current item (ignores loop).
+		 * @returns {boolean}
+		 */
 		hasNext: function()
 		{
 			return this.current === this.count - 1;
 		},
 
+		/**
+		 * Has previous
+		 * @description Are there any slides previous to current item (ignores loop).
+		 * @returns {boolean}
+		 */
 		hasPrevious: function()
 		{
 			return this.current === 0;
 		},
 
-		// Next
+
+		/**
+		 * Next
+		 * @description Go to the next slide.
+		 */
 		next: function()
 		{
 			this.to( this.current + 1 );
 		},
 
-		// Previous
+		/**
+		 * Previous
+		 * @description Go to previous slide.
+		 */
 		previous: function()
 		{
 			this.to( this.current - 1 );
 		},
 
-		// Go to x
-		to: function(x)
+		/**
+		 * To
+		 * @description Go to slide.
+		 * @param  {integer} x
+		 * @param  {boolean} user
+		 */
+		to: function(x, user)
 		{
 			// Allow method while animating?
 			if ( this.opts.jumpQueue )
@@ -392,6 +405,20 @@
 				x = this.count - 1;
 			}
 
+			// Stop or reset autoplay
+			if ( user && ! this.stopped )
+			{
+				if ( this.opts.autostop )
+				{
+					this.stop();
+				}
+				else if ( ! this.paused )
+				{
+					this.play();
+				}
+			}
+
+			// Change slide
 			if ( x !== this.current )
 			{
 				this._transitions[ this.opts.transition ].execute.call(this, x);
@@ -401,7 +428,11 @@
 			this.$target.trigger('update');
 		},
 
-		// Transition redraw
+		/**
+		 * Redraw
+		 * @description Redraw the carousel.
+		 * @param  {string} transition
+		 */
 		redraw: function(transition)
 		{
 			this._transitions[ this.opts.transition ].teardown.call(this);
@@ -416,10 +447,17 @@
 			this.to(0);
 		},
 
-		// Start autoplay
+		/**
+		 * Play
+		 * @description Start autoplay.
+		 */
 		play: function()
 		{
 			var self = this;
+
+			clearInterval( this.timeout );
+
+			this.paused = this.stopped = false;
 
 			this.timeout = setInterval(function()
 			{
@@ -427,9 +465,24 @@
 			}, this.opts.auto);
 		},
 
-		// Stop autoplay
+		/**
+		 * Pause
+		 * @description Pause autoplay.
+		 */
+		pause: function()
+		{
+			this.paused = true;
+			clearInterval( this.timeout );
+		},
+
+		/**
+		 * Stop
+		 * @description Stop autoplay entirely.
+		 */
 		stop: function()
 		{
+			this.stopped = true;
+			this.paused = false;
 			clearInterval( this.timeout );
 		}
 
