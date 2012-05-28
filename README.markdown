@@ -1,5 +1,5 @@
 # jQuery Slideshow
-[jQuery Slideshow][1] is a performant and flexible slideshow/carousel plugin with support for different (and extendable) transitions and swipe left/right touch gestures. Less than 4KB minified and under 2KB with gzip compression.
+[jQuery Slideshow][1] is a performant and flexible slideshow/carousel plugin with support for different (and extendable) transitions and swipe left/right touch gestures. 5KB minified and under 2KB when gzipped.
 
 ## Dependencies
 
@@ -23,7 +23,7 @@ https://github.com/i-like-robots/jQuery-Slideshow/issues
 
 ## Versioning
 
-The current version is `1.1.2`. Releases will be numbered in following format:
+The current version is `1.2.2`. Releases will be numbered in following format:
 
 `<major>.<minor>.<patch>`
 
