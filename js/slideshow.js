@@ -1,8 +1,8 @@
 ﻿/**
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    21/05/2012
- * @version     1.2.1
+ * @modified    28/05/2012
+ * @version     1.2.2
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -73,9 +73,8 @@
 				return;
 			}
 
-			// Setup styles
-			this.$target.css('position', 'relative');
-			this.$carousel.wrap('<div style="overflow:hidden;" />');
+			// Wrapper
+			this.$carousel.wrap('<div style="position:relative;overflow:hidden;" />'); // http://snook.ca/archives/html_and_css/position_relative_overflow_ie
 
 			this._transitions[ this.opts.transition ].setup.call(this);
 
@@ -118,10 +117,12 @@
 			}
 
 			// On update
-			this.$target.on('update.slides', function()
-			{
-				self._update();
-			});
+			this.$target
+				.css('position', 'relative')
+				.on('update.slides', function()
+				{
+					self._update();
+				});
 
 			// Gestures - modified from Zepto.js <https://github.com/madrobby/zepto/blob/master/src/touch.js>
 			if ( this.opts.gestures && 'ontouchstart' in document.documentElement )
