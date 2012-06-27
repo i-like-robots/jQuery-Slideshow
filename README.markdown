@@ -5,9 +5,9 @@
 
 jQuery 1.7+
 
-## Tested browsers and platforms*
+## Tested browsers and platforms
 
- * Firefox 3.6 and 11 (including mobile)
+ * Firefox 3.6 and 12 (including mobile)
  * Chrome 18
  * Safari 5.1
  * Internet Explorer 7-9
@@ -23,7 +23,7 @@ https://github.com/i-like-robots/jQuery-Slideshow/issues
 
 ## Versioning
 
-The current version is `1.2.2`. Releases will be numbered in following format:
+The current version is `1.3.0`. Releases will be numbered in following format:
 
 `<major>.<minor>.<patch>`
 

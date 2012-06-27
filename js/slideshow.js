@@ -1,8 +1,8 @@
 ﻿/**
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    28/05/2012
- * @version     1.2.2
+ * @modified    27/06/2012
+ * @version     1.3.0
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -31,6 +31,8 @@
 		easeIn: 'swing',          // Animation easing on fade in.
 		easeOut: 'swing',         // Animation easing on fade out.
 		speed: 600,               // Animation speed between slides in milliseconds.
+		slideWidth: false,        // Set a fixed width for each slide
+		offsetEnd: 0,             // Number of slides to ignore at the end
 		pagination: true,         // Render pagination.
 		skip: true,               // Render next/previous skip buttons.
 		jumpQueue: true,          // Allow .to() method while animations are queued.
@@ -74,7 +76,7 @@
 			}
 
 			// Wrapper
-			this.$carousel.wrap('<div style="position:relative;overflow:hidden;" />'); // http://snook.ca/archives/html_and_css/position_relative_overflow_ie
+			this.$carousel.wrap('<div style="position:relative;overflow:hidden;" />');
 
 			this._transitions[ this.opts.transition ].setup.call(this);
 
@@ -86,7 +88,7 @@
 				for ( var i = 0; i < this.count; i++ )
 				{
 					$('<li class="' + ( i === this.current ? 'selected' : '' ) + '">' +
-						'<a data-slides="' + i + '" href="">' + (i + 1) + '</a>' +
+						'<a data-slides="' + i + '" href="">' + (i + 1) + '</a>' + // Keep href attribute so we can use click event on touch screens
 					  '</li>').appendTo( this.$pagination );
 				}
 
@@ -100,7 +102,7 @@
 				this.$previous = $('<a class="slides-previous" data-slides="previous" href="">Previous</a>').appendTo( this.$target );
 			}
 
-			// Control events
+			// Controls
 			if ( this.opts.pagination || this.opts.skip )
 			{
 				this.$target.on('click.slides', '[data-slides]', function(e)
@@ -131,17 +133,17 @@
 				{
 					self.t = {
 						x1: e.touches[0].pageX,
-						y1: e.touches[0].pageY,
-						el: e.touches[0].target
+						el: e.touches[0].target,
+						dif: 0
 					};
 				}, false);
 
 				this.target.addEventListener('touchmove', function(e)
 				{
 					self.t.x2 = e.touches[0].pageX;
-					self.t.y2 = e.touches[0].pageY;
+					self.t.dif = Math.abs(self.t.x1 - self.t.x2);
 
-					if (Math.abs(self.t.x1 - self.t.x2) > 30)
+					if ( self.t.dif > 30 )
 					{
 						e.preventDefault();
 					}
@@ -149,24 +151,9 @@
 
 				this.target.addEventListener('touchend', function()
 				{
-					if ( (self.t.x2 > 0 || self.t.y2 > 0) && (Math.abs(self.t.x1 - self.t.x2) > 30 || Math.abs(self.t.y1 - self.t.y2) > 30) )
+					if ( self.t.x2 > 0 && self.t.dif > 30 )
 					{
-						var dir = function()
-						{
-							if ( Math.abs(self.t.x1 - self.t.x2) >= Math.abs(self.t.y1 - self.t.y2) )
-							{
-								return self.t.x1 - self.t.x2 > 0 ? 'left' : 'right';
-							}
-						}();
-
-						if ( dir === 'left' )
-						{
-							self.to('next', true);
-						}
-						else if ( dir === 'right' )
-						{
-							self.to('previous', true);
-						}
+						self.to( self.t.x1 - self.t.x2 > 0 ? 'next' : 'previous' , true);
 					}
 				}, false);
 			}
@@ -247,7 +234,7 @@
 		 * @description Transitions consist of 3 methods:
 		 *              1) Setup - Code to setup styles and variables for the transition.
 		 *              2) Execute - Code to perform the transition between 2 slides.
-		 *              3) Teardown - Remove styles and variables created by methods 1 and 2.
+		 *              3) Teardown - Cleanup any styles and variables created by methods 1 and 2.
 		 */
 		_transitions: {
 
@@ -292,7 +279,10 @@
 			scroll: {
 				setup: function()
 				{
-					var slide = this.$items.css('float', 'left').outerWidth(true);
+					var slide = this.$items.css({
+						'float': 'left',
+						width: this.opts.slideWidth
+					}).outerWidth(true);
 
 					this.$carousel.css({
 						position: 'relative',
@@ -301,7 +291,8 @@
 					});
 
 					this.realcount = this.count;
-					this.count = this.count - Math.ceil(this.$target.width() / slide) + 1;
+
+					this.count = this.count - this.opts.offsetEnd;
 				},
 				execute: function(to)
 				{
