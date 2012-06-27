@@ -1,6 +1,6 @@
 /**
  * Author:      Matt Hinchliffe <www.maketea.co.uk>
- * Modified:    20/04/2012
+ * Modified:    27/06/2012
  * Description: Simple jQuery slideshow
  * Example:
  * <div class="slideshow">
@@ -26,7 +26,6 @@
 		.slideshow .selected a {
 			background-color:#333;
 		}
-
 
 	.carousel {
 		margin:0;
