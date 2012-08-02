@@ -1,8 +1,8 @@
 ﻿/**
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    27/06/2012
- * @version     1.3.0
+ * @modified    02/08/2012
+ * @version     1.4.0
  * @description jQuery Slideshow
  * @example
  * <div class="slideshow">
@@ -15,30 +15,38 @@
  * @example
  * var slideshow = $('.slideshow').slides(opts).eq(0).data('slides');
  */
-
 /*jshint trailing:true, smarttabs:true */
 ; (function($, undefined)
 {
 	"use strict";
 
 	var defaults = {
+
+		// Setup
 		carousel: '.carousel',    // Selector for the carousel element.
 		items: '.slide',          // Selector for carousel items.
+		slideWidth: false,        // Set a fixed width for each slide.
+		jumpQueue: true,          // Allow .to() method while animations are queued.
+		offset: 1,                // Starting slide.
+
+		// Controls
+		skip: true,               // Render next/previous skip buttons.
+		pagination: true,         // Render pagination.
+		gestures: true,           // Allow touch swipe events to control previous/next.
 		auto: 6000,               // Autoplay timeout in milliseconds. Set to false for no autoplay.
 		autostop: true,           // Stop autoplay when user manually changes slide.
 		hoverPause: false,        // Pause autoplay on hover.
-		easing: 'swing',          // Animation easing for single transition
+		loop: false,              // Allow slideshow to loop.
+
+		// Transitions
+		transition: 'scroll',     // Specify transition.
+		speed: 600,               // Animation speed between slides in milliseconds.
+		easing: 'swing',          // Animation easing on scroll.
 		easeIn: 'swing',          // Animation easing on fade in.
 		easeOut: 'swing',         // Animation easing on fade out.
-		speed: 600,               // Animation speed between slides in milliseconds.
-		slideWidth: false,        // Set a fixed width for each slide
-		offsetEnd: 0,             // Number of slides to ignore at the end
-		pagination: true,         // Render pagination.
-		skip: true,               // Render next/previous skip buttons.
-		jumpQueue: true,          // Allow .to() method while animations are queued.
-		loop: false,              // Allow slideshow to loop.
-		transition: 'scroll',     // Specify transition.
-		gestures: true,           // Allow touch swipe events to control previous/next.
+		visible: 1,               // Number of slides visible when scrolling.
+
+		// Callbacks
 		onupdate: undefined       // A callback function to execute on update event.
 	};
 
@@ -46,9 +54,19 @@
 	{
 		this.target = target;
 		this.$target = $(target);
+
 		this.opts = $.extend( {}, defaults, options, this.$target.data() ); // Create a new options object for each instance
 
-		this._init();
+		this.$carousel = this.$target.children( this.opts.carousel );
+		this.$items = this.$carousel.children( this.opts.items );
+
+		this.count = this.$items.length;
+		this.current = this.opts.offset - 1;
+
+		if ( this.count > 1 )
+		{
+			this._init();
+		}
 
 		return this;
 	};
@@ -63,21 +81,8 @@
 		{
 			var self = this;
 
-			this.$carousel = this.$target.children( this.opts.carousel );
-			this.$items = this.$carousel.children( this.opts.items );
-
-			this.count = this.$items.length;
-			this.current = 0;
-
-			// Only run if there is more than 1 slide
-			if ( this.count <= 1 )
-			{
-				return;
-			}
-
-			// Wrapper
+			// Slideshow setup
 			this.$carousel.wrap('<div style="position:relative;overflow:hidden;" />');
-
 			this._transitions[ this.opts.transition ].setup.call(this);
 
 			// Create pagination controls
@@ -158,10 +163,10 @@
 				}, false);
 			}
 
-			// Start up
+			// Start
 			this.to(this.current);
 
-			// Init autoplay
+			// Autoplay
 			if ( this.opts.auto )
 			{
 				if ( this.opts.hoverPause )
@@ -192,6 +197,7 @@
 		 */
 		_update: function()
 		{
+			// Highlight current item within pagination
 			if ( this.opts.pagination )
 			{
 				this.$pagination
@@ -201,6 +207,7 @@
 					.addClass('selected');
 			}
 
+			// Disable skip buttons when not looping
 			if ( this.opts.skip && ! this.opts.loop )
 			{
 				if ( this.hasNext() )
@@ -291,8 +298,7 @@
 					});
 
 					this.realcount = this.count;
-
-					this.count = this.count - this.opts.offsetEnd;
+					this.count-= this.opts.visible - 1;
 				},
 				execute: function(to)
 				{
@@ -329,14 +335,13 @@
 			return this.current === 0;
 		},
 
-
 		/**
 		 * Next
 		 * @description Go to the next slide.
 		 */
 		next: function()
 		{
-			this.to( this.current + 1 );
+			this.to('next');
 		},
 
 		/**
@@ -345,7 +350,7 @@
 		 */
 		previous: function()
 		{
-			this.to( this.current - 1 );
+			this.to('previous');
 		},
 
 		/**
