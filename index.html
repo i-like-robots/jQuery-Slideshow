@@ -9,6 +9,7 @@
 
 
 	<link rel="stylesheet" href="css/example.css" />
+	<link rel="stylesheet" href="css/pygments.css" />
 	<link rel="stylesheet" href="css/slideshow.css" />
 
 	<!--
@@ -21,59 +22,117 @@
 
 	<div id="container">
 
-		<section class="introduction">
+		<section id="introduction">
 			<h1>jQuery Slideshow</h1>
 			<p>
 				<a href="http://github.com/i-like-robots/jQuery-Slideshow">jQuery Slideshow</a> is a performant and
-				flexible slideshow/carousel plugin with support for different (and extendable) transitions and swipe
-				left/right touch gestures. 5KB minified and under 2KB when gzipped.
+				developer friendly slideshow/carousel plugin with support for touch gestures. 2KB when gzipped.
 			</p>
-		</section>
 
-		<hr />
+			<div id="example">
 
-		<section class="examples">
-			<h2>Example</h2>
+				<div class="slideshow" data-loop="true" data-skip="false">
+					<ul class="carousel">
+						<li class="slide">
+							<img src="http://placebox.es/440/200/d97ef2/f5f5f5" alt="" width="440" height="200" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/440/200/50ac3d/f5f5f5" alt="" width="440" height="200" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/440/200/0a77bb/f5f5f5" alt="" width="440" height="200" />
+						</li>
+					</ul>
+				</div>
 
-			<div class="slideshow" data-loop="true">
-				<ul class="carousel">
-					<li class="slide slide-1">
-						<img src="http://placebox.es/448/200/d97ef2/f5f5f5" alt="" width="448" height="200" />
-					</li>
-					<li class="slide slide-2">
-						<img src="http://placebox.es/448/200/50ac3d/f5f5f5" alt="" width="448" height="200" />
-					</li>
-					<li class="slide slide-3">
-						<img src="http://placebox.es/448/200/0a77bb/f5f5f5" alt="" width="448" height="200" />
-					</li>
-				</ul>
+				<p>
+					<label for="transition">Change the transition:</label>
+					<select name="transition" id="transition">
+						<option selected>scroll</option>
+						<option>crossfade</option>
+					</select>
+				</p>
+
+				<div class="slideshow" data-visible="4" data-pagination="false">
+					<ul class="carousel">
+						<li class="slide">
+							<img src="http://placebox.es/110/110/d97ef2/f5f5f5" alt="" width="110" height="110" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/110/110/50ac3d/f5f5f5" alt="" width="110" height="110" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/110/110/0a77bb/f5f5f5" alt="" width="110" height="110" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/110/110/d97ef2/f5f5f5" alt="" width="110" height="110" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/110/110/50ac3d/f5f5f5" alt="" width="110" height="110" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/110/110/0a77bb/f5f5f5" alt="" width="110" height="110" />
+						</li>
+					</ul>
+				</div>
+
 			</div>
+		</section>
 
-			<label for="transition">Change the transition:</label>
-			<select name="transition" id="transition">
-				<option selected>scroll</option>
-				<option>crossfade</option>
-			</select>
+		<hr />
 
-			<!-- code -->
-			<pre><code><span class="comment">// Create slideshow instances</span>
-var $s = $('.slideshow').slides(opts);
+		<section id="setup">
+			<h2>Setup</h2>
+			<p>
+				Setup is not restricted to a fixed markup pattern but is dependent on class names. Theoretically almost
+				any content can be placed within a slide. If you are using images always specify the width and height.
+			</p>
 
-<span class="comment">// Access an instances API</span>
-var api = $s.eq(0).data('slides');</code></pre>
-			<!--/ code  -->
+			<figure>
+<pre class="syntax"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"slideshow"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"carousel"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"slide"</span><span class="nt">&gt;</span>…<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"slide"</span><span class="nt">&gt;</span>…<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"slide"</span><span class="nt">&gt;</span>…<span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code>
+</pre>
+			</figure>
+
+			<p>
+				The plugin is instantiated in the usual manner and an instances API can be accessed via element data.
+			</p>
+
+			<figure>
+<pre class="syntax"><code><span class="c1">// Create slideshow instances</span>
+<span class="kd">var</span> <span class="nx">$slideshow</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'.slideshow'</span><span class="p">).</span><span class="nx">slides</span><span class="p">(),</span>
+
+    <span class="c1">// Access an instance API</span>
+    <span class="nx">api</span> <span class="o">=</span> <span class="nx">$slideshow</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">'slides'</span><span class="p">);</span></code>
+</pre>
+			</figure>
 
 		</section>
 
 		<hr />
 
-		<section class="options">
-			<h3>Options</h3>
+		<section id="options">
+			<h2>Options</h2>
 			<p>
-				Options can be specified via the standard jQuery plugin interface or as data attributes on the target
-				element itself.
+				Global options can be specified via the standard jQuery plugin interface or as data attributes on
+				individual slideshow elements.
 			</p>
-			<dl>
+
+			<figure>
+<pre class="syntax"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"slideshow"</span>
+    <span class="na">data-pagination=</span><span class="s">"true"</span>
+    <span class="na">data-loop=</span><span class="s">"false"</span>
+    <span class="na">data-transition=</span><span class="s">"crossfade"</span><span class="nt">&gt;</span></code>
+</pre>
+			</figure>
+
+			<h3>Setup</h3>
+			<dl id="options-setup">
 				<dt>carousel</dt>
 				<dd>
 					Selector for the carousel element. Default: <code>".carousel"</code>.
@@ -81,6 +140,34 @@ var api = $s.eq(0).data('slides');</code></pre>
 				<dt>items</dt>
 				<dd>
 					Selector for carousel items. Default: <code>".slide"</code>.
+				</dd>
+				<dt>slideWidth</dt>
+				<dd>
+					Set a fixed width for each slide. Default: <code>false</code>.
+				</dd>
+				<dt>jumpQueue</dt>
+				<dd>
+					Allow .to() method while animations are queued. Default: <code>true</code>.
+				</dd>
+				<dt>offset</dt>
+				<dd>
+					Starting slide. Default: <code>1</code>.
+				</dd>
+			</dl>
+
+			<h3>Controls</h3>
+			<dl id="options-controls">
+				<dt>skip</dt>
+				<dd>
+					Render next/previous skip buttons. Default: <code>true</code>.
+				</dd>
+				<dt>pagination</dt>
+				<dd>
+					Render pagination. Default: <code>true</code>.
+				</dd>
+				<dt>gestures</dt>
+				<dd>
+					Allow touch swipe events to control previous/next. Default: <code>true</code>.
 				</dd>
 				<dt>auto</dt>
 				<dd>
@@ -94,9 +181,25 @@ var api = $s.eq(0).data('slides');</code></pre>
 				<dd>
 					Pause autoplay on hover. Default: <code>false</code>.
 				</dd>
+				<dt>loop</dt>
+				<dd>
+					Allow slideshow to loop. Default: <code>false</code>.
+				</dd>
+			</dl>
+
+			<h3>Transitions</h3>
+			<dl id="options-transitions">
+				<dt>transition</dt>
+				<dd>
+					Specify transition. Default: <code>"scroll"</code>.
+				</dd>
+				<dt>speed</dt>
+				<dd>
+					Animation speed between slides in milliseconds. Default: <code>600</code>.
+				</dd>
 				<dt>easing</dt>
 				<dd>
-					Animation easing for single transition. Default: <code>"swing"</code>.
+					Animation easing on scroll. Default: <code>"swing"</code>.
 				</dd>
 				<dt>easeIn</dt>
 				<dd>
@@ -106,42 +209,14 @@ var api = $s.eq(0).data('slides');</code></pre>
 				<dd>
 					Animation easing on fade out. Default: <code>"swing"</code>.
 				</dd>
-				<dt>speed</dt>
+				<dt>visible</dt>
 				<dd>
-					Animation speed between slides in milliseconds. Default: <code>600</code>.
+					Number of slides visible when scrolling. Default: <code>1</code>.
 				</dd>
-				<dt>slideWidth</dt>
-				<dd>
-					Set a fixed width for each slide. Default: <code>false</code>.
-				</dd>
-				<dt>offsetEnd</dt>
-				<dd>
-					Number of slides to ignore at the end. For example if slideshow is wider than a single slide. Default: <code>0</code>.
-				</dd>
-				<dt>pagination</dt>
-				<dd>
-					Render pagination. Default: <code>true</code>.
-				</dd>
-				<dt>skip</dt>
-				<dd>
-					Render next/previous skip buttons. Default: <code>true</code>.
-				</dd>
-				<dt>jumpQueue</dt>
-				<dd>
-					Allow .to() method while animations are queued. Default: <code>true</code>.
-				</dd>
-				<dt>loop</dt>
-				<dd>
-					Allow slideshow to loop. Default: <code>false</code>.
-				</dd>
-				<dt>transition</dt>
-				<dd>
-					Specify transition. Default: <code>"scroll"</code>.
-				</dd>
-				<dt>gestures</dt>
-				<dd>
-					Allow touch swipe events to control previous/next. Default: <code>true</code>.
-				</dd>
+			</dl>
+
+			<h3>Callbacks</h3>
+			<dl id="options-callbacks">
 				<dt>onupdate</dt>
 				<dd>
 					A callback function to execute on update event. Default: <code>false</code>.
@@ -151,8 +226,8 @@ var api = $s.eq(0).data('slides');</code></pre>
 
 		<hr />
 
-		<section class="api">
-			<h4>Public methods</h4>
+		<section id="api">
+			<h2>Public methods</h2>
 			<dl>
 				<dt>.hasNext()</dt>
 				<dd>
@@ -195,11 +270,11 @@ var api = $s.eq(0).data('slides');</code></pre>
 
 	</div>
 
-	<a href="https://github.com/i-like-robots/jQuery-Slideshow">
-		<img style="position:absolute;top:0;right:0;border:0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" />
+	<a href="http://github.com/i-like-robots/jQuery-Slideshow">
+		<img style="position:absolute; top:0; right:0; border:0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
 	</a>
 
-	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
 	<script src="js/slideshow.js"></script>
 	<script>
 		$(function()
