@@ -182,7 +182,7 @@
 				</dd>
 				<dt>auto</dt>
 				<dd>
-					Autoplay timeout in milliseconds. Set to false for no autoplay. Default: <code>6000</code>.
+					Autoplay timeout in milliseconds. Set to a falsy value for no autoplay. Default: <code>6000</code>.
 				</dd>
 				<dt>autostop</dt>
 				<dd>
@@ -210,15 +210,7 @@
 				</dd>
 				<dt>easing</dt>
 				<dd>
-					Animation easing on scroll. Default: <code>"swing"</code>.
-				</dd>
-				<dt>easeIn</dt>
-				<dd>
-					Animation easing on fade in. Default: <code>"swing"</code>.
-				</dd>
-				<dt>easeOut</dt>
-				<dd>
-					Animation easing on fade out. Default: <code>"swing"</code>.
+					Animation easing between slides. Default: <code>"swing"</code>.
 				</dd>
 				<dt>visible</dt>
 				<dd>
@@ -230,7 +222,11 @@
 			<dl id="options-callbacks">
 				<dt>onupdate</dt>
 				<dd>
-					A callback function to execute on update event. Default: <code>false</code>.
+					A callback function to execute on slide change. Default: <code>false</code>.
+				</dd>
+				<dt>oncomplete</dt>
+				<dd>
+					A callback function to execute on slide transition complete. Default: <code>false</code>.
 				</dd>
 			</dl>
 		</section>
@@ -285,7 +281,7 @@
 		<img style="position:absolute; top:0; right:0; border:0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
 	</a>
 
-	<script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.8.2.min.js"></script>
 	<script src="js/slideshow.js"></script>
 	<script>
 		$(function()
