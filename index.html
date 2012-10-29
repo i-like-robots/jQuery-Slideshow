@@ -196,6 +196,14 @@
 				<dd>
 					Allow slideshow to loop. Default: <code>false</code>.
 				</dd>
+				<dt>nextText</dt>
+				<dd>
+					Text to display on next skip button. Default: <code>"Next"</code>.
+				</dd>
+				<dt>previousText</dt>
+				<dd>
+					Text to display on previous skip button. Default: <code>"Previous"</code>.
+				</dd>
 			</dl>
 
 			<h3>Transitions</h3>
@@ -289,7 +297,7 @@
 			// Create slideshow instances
 			var $s = $('.slideshow').slides(),
 
-			    // Access an instances API
+			    // Access an instance API
 			    api = $s.eq(0).data('slides');
 
 			// Transition select

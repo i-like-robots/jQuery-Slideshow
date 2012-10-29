@@ -1,8 +1,8 @@
 ﻿/**
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    09/10/2012
- * @version     1.5.0
+ * @modified    29/10/2012
+ * @version     1.5.1
  * @example
  * <div class="slideshow">
  *     <ul class="carousel">
@@ -35,6 +35,8 @@
         autostop: true,             // Stop autoplay when user manually changes slide.
         hoverPause: false,          // Pause autoplay on hover.
         loop: false,                // Allow slideshow to loop.
+        nextText: 'Next',           // Text to display on next skip button
+        previousText: 'Previous',   // Text to display on previous skip button
 
         // Transitions
         transition: 'scroll',       // Specify transition.
@@ -80,31 +82,58 @@
             var self = this;
 
             // Slideshow setup
-            this.$carousel.wrap('<div style="position:relative;overflow:hidden;" />');
-            this.$wrapper = this.$carousel.parent(); // Using $wrap with a jQuery object will not return element as expected
+            var $wrapper = $('<div>', {
+               style: 'position:relative;overflow:hidden;'
+            });
+
+            this.$wrapper = this.$carousel.wrap($wrapper).parent(); // $wrapper is a document fragment, not the new DOM reference
+
             this.$target.css('position', 'relative');
             this._transitions[ this.opts.transition ].setup.call(this);
 
             // Create pagination controls
             if (this.opts.pagination)
             {
-                this.$pagination = $('<ul class="slides-pagination" />');
+                this.$pagination = $('<ul>', {
+                    'class': 'slides-pagination'
+                });
 
-                for (var i = 0; i < this.count; i++)
+                for (var i = 0, len = this.count; i < len; i++)
                 {
-                    $('<li class="' + (i === this.current ? 'selected' : '') + '">' +
-                        '<a data-slides="' + i + '" href="">' + (i + 1) + '</a>' + // Keep href attribute so we can use click event on touch screens
-                      '</li>').appendTo(this.$pagination);
+                    var $item = $('<li>', {
+                        'class': i === this.current ? 'selected' : ''
+                    });
+
+                    var $link = $('<a>', {
+                        'data-slides': i,
+                        text: i + 1,
+                        href: '#' // Requires an href attribute to use click event on touch screens
+                    });
+
+                    $item.append($link).appendTo(this.$pagination);
                 }
 
-                this.$pagination.appendTo(this.$target);
+                this.$target.append(this.$pagination);
             }
 
             // Create skip link controls
             if (this.opts.skip)
             {
-                this.$next = $('<a class="slides-next" data-slides="next" href="">Next</a>').appendTo(this.$target);
-                this.$previous = $('<a class="slides-previous" data-slides="previous" href="">Previous</a>').appendTo(this.$target);
+                this.$next = $('<a>', {
+                    'data-slides': 'next',
+                    'class': 'slides-next',
+                    text: this.opts.nextText,
+                    href: '#' // Requires an href attribute to use click event on touch screens
+                });
+
+                this.$previous = $('<a>', {
+                    'data-slides': 'previous',
+                    'class': 'slides-previous',
+                    text: this.opts.previousText,
+                    href: '#' // Requires an href attribute to use click event on touch screens
+                });
+
+                this.$target.append(this.$next).append(this.$next, this.$previous);
             }
 
             // Controls
@@ -227,9 +256,9 @@
         /**
          * Transitions
          * @description Transitions consist of 3 methods:
-         *              1) Setup - Code to setup styles and variables for the transition.
-         *              2) Execute - Code to perform the transition between 2 slides.
-         *              3) Teardown - Cleanup any styles and variables created by methods 1 and 2.
+         *     1. Setup - Code to setup styles and variables for the transition.
+         *     2. Execute - Code to perform the transition between 2 slides.
+         *     3. Teardown - Cleanup any styles and variables created by methods 1 and 2.
          * @private
          */
         _transitions: {
@@ -287,9 +316,8 @@
                 },
                 execute: function(to)
                 {
-
                     this.$wrapper.animate({
-                        scrollLeft: this.$items.eq(to).position().left + this.$wrapper.scrollLeft() // Prevents redraws
+                        scrollLeft: this.$items.eq(to).position().left + this.$wrapper.scrollLeft() // Scroll prevents redraws
                     }, this.opts.speed, this.opts.easing, this.opts.oncomplete);
                 },
                 teardown: function()
