@@ -73,18 +73,37 @@
 			$.fx.off = true;
 			QUnit.config.reorder = false;
 
-			test("Setup", function()
+			var lifecycle = {
+				setup: function()
+				{
+					if ( ! api )
+					{
+						$s = $('.slideshow').slides();
+						api = $s.eq(0).data('slides');
+					}
+				}
+			};
+
+			module("Setup", lifecycle);
+
+			test("$(collection).slides()", function()
 			{
-				$s = $('.slideshow').slides();
-				api = $s.eq(0).data('slides');
-				ok(api, "Init plugin and return API");
+				ok(api.count > 0, "Check slides are found");
+				ok(api.$pagination.length > 0, "Check pagination created");
+				ok(api.$next.length > 0, "Check next skip link created");
+				ok(api.$previous.length > 0, "Check previous skip link created");
+			});
+
+			test("API", function()
+			{
+				equal((typeof api).toLowerCase() == "object" && ! $.isEmptyObject(api), true, "API returned");
 			});
 
 			//
 			// API tests
 			//
 
-			module("Public API");
+			module("Public API", lifecycle);
 
 			test(".hasNext()", function()
 			{
@@ -153,11 +172,20 @@
 				equal(api.current, api.count - 1, "Out of bounds (total + 1) - looping disabled");
 			});
 
+			test(".redraw()", function()
+			{
+				api.redraw("crossfade");
+				equal(api.opts.transition, "crossfade", "Test crossfade registered");
+
+				api.redraw("scroll");
+				equal(api.opts.transition, "scroll", "Test scroll registered");
+			});
+
 			//
 			// user controls
 			//
 
-			module("User controls");
+			module("User controls", lifecycle);
 
 			test("Next skip link (looping)", function()
 			{
