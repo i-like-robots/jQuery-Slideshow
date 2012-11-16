@@ -1,8 +1,8 @@
-﻿/**
+/**
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    29/10/2012
- * @version     1.5.1
+ * @modified    15/11/2012
+ * @version     1.5.2
  * @example
  * <div class="slideshow">
  *     <ul class="carousel">
@@ -14,7 +14,7 @@
  * @example
  * var slideshow = $('.slideshow').slides(opts).eq(0).data('slides');
  */
-; (function($, undefined)
+(function($, undefined)
 {
     "use strict";
 
@@ -152,7 +152,6 @@
                 });
             }
 
-
             // Gestures - modified from Zepto.js <https://github.com/madrobby/zepto/blob/master/src/touch.js>
             if (this.opts.gestures && 'ontouchstart' in document.documentElement)
             {
@@ -231,9 +230,9 @@
             }
 
             // Disable skip buttons when not looping
-            if (this.opts.skip && ! this.opts.loop)
+            if (this.opts.skip)
             {
-                if ( this.hasNext() )
+                if ( ! this.hasNext() && ! this.opts.loop )
                 {
                     this.$next.addClass('disabled');
                 }
@@ -242,7 +241,7 @@
                     this.$next.removeClass('disabled');
                 }
 
-                if ( this.hasPrevious() )
+                if ( ! this.hasPrevious() && ! this.opts.loop )
                 {
                     this.$previous.addClass('disabled');
                 }
@@ -310,7 +309,6 @@
                     }).outerWidth(true);
 
                     this.$carousel.css('minWidth', slide * this.count); // setting width property does not work on iOS 4
-
                     this.realcount = this.count;
                     this.count-= this.opts.visible - 1;
                 },
@@ -323,8 +321,6 @@
                 teardown: function()
                 {
                     this.count = this.realcount;
-                    delete this.realcount;
-
                     this.$carousel.stop(true, true).removeAttr('style');
                     this.$items.removeAttr('style');
                 }
@@ -338,7 +334,7 @@
          */
         hasNext: function()
         {
-            return this.current === this.count - 1;
+            return this.current < (this.count - 1);
         },
 
         /**
@@ -348,7 +344,7 @@
          */
         hasPrevious: function()
         {
-            return this.current === 0;
+            return this.current > 0;
         },
 
         /**
@@ -398,24 +394,13 @@
             }
 
             // Loop
-            if (x > this.count - 1)
+            if (x >= this.count)
             {
-                if ( ! this.opts.loop)
-                {
-                    this.stop();
-                    return;
-                }
-
-                x = 0;
+                x = this.opts.loop ? 0 : this.current;
             }
             else if (x < 0)
             {
-                if ( ! this.opts.loop)
-                {
-                    return;
-                }
-
-                x = this.count - 1;
+                x = this.opts.loop ? this.count - 1 : this.current;
             }
 
             // Stop or reset autoplay

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" />
+
+	<title>QUnit tests // jQuery Slideshow</title>
+
+
+	<link rel="stylesheet" href="../css/example.css" />
+	<link rel="stylesheet" href="../css/slideshow.css" />
+	<link rel="stylesheet" href="qunit-1.10.0.css" />
+
+	<!--
+	jQuery Slideshow by Matt Hinchliffe <http://www.maketea.co.uk>
+	Find out more at GitHub <http://github.com/i-like-robots/jQuery-Slideshow>
+	-->
+
+</head>
+<body>
+
+	<div id="container">
+
+		<section id="introduction">
+			<h1>QUnit tests</h1>
+
+			<div id="example">
+
+				<div class="slideshow" data-auto="0">
+					<ul class="carousel">
+						<li class="slide">
+							<img src="http://placebox.es/440/200/d97ef2/f5f5f5" alt="" width="440" height="200" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/440/200/50ac3d/f5f5f5" alt="" width="440" height="200" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/440/200/0a77bb/f5f5f5" alt="" width="440" height="200" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/440/200/d97ef2/f5f5f5" alt="" width="440" height="200" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/440/200/50ac3d/f5f5f5" alt="" width="440" height="200" />
+						</li>
+						<li class="slide">
+							<img src="http://placebox.es/440/200/0a77bb/f5f5f5" alt="" width="440" height="200" />
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</section>
+
+	</div>
+
+	<section id="tests" style="margin: 20px;">
+		<h2>Tests</h2>
+		<div id="qunit"></div>
+	</section>
+
+
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="../js/slideshow.js"></script>
+	<script src="qunit-1.10.0.js"></script>
+
+	<script>
+		$(function()
+		{
+			var $s, api;
+
+			$.fx.off = true;
+			QUnit.config.reorder = false;
+
+			test("Setup", function()
+			{
+				$s = $('.slideshow').slides();
+				api = $s.eq(0).data('slides');
+				ok(api, "Init plugin and return API");
+			});
+
+			//
+			// API tests
+			//
+
+			module("Public API");
+
+			test(".hasNext()", function()
+			{
+				api.to(0);
+				equal(api.hasNext(), true, "First slide");
+
+				api.to( api.count -1 );
+				equal(api.hasNext(), false, "Last slide");
+			});
+
+			test(".hasPrevious()", function()
+			{
+				api.to(0);
+				equal(api.hasPrevious(), false, "First slide");
+
+				api.to( api.count - 1 );
+				equal(api.hasPrevious(), true, "Last slide");
+			});
+
+			test(".next()", function()
+			{
+				api.to(0);
+				var prev = api.current;
+
+				api.next();
+				equal(prev + 1, api.current, "Current slide equals last slide + 1");
+			});
+
+			test(".previous()", function()
+			{
+				api.to( api.count - 1 );
+				var prev = api.current;
+
+				api.previous();
+				equal(prev - 1, api.current, "Current slide equals last slide - 1");
+			});
+
+			test(".to()", function()
+			{
+				api.to(0);
+				equal(api.current, 0, "Go-to first slide");
+
+				api.to( api.count - 1 );
+				equal(api.current, api.count - 1, "Go-to last slide");
+
+				// loop
+				$.extend(api.opts, { loop: true });
+
+				api.to(0);
+				api.to( api.current - 1 );
+				equal(api.current, api.count - 1, "Out of bounds (0 - 1) - looping enabled");
+
+				api.to( api.count - 1 );
+				api.to( api.current + 1 );
+				equal(api.current, 0, "Out of bounds (total + 1) - looping enabled");
+
+				// no loop
+				$.extend(api.opts, { loop: false });
+
+				api.to(0);
+				api.to( api.current - 1 );
+				equal(api.current, 0, "Out of bounds (0 - 1) - looping disabled");
+
+				api.to( api.count - 1 );
+				api.to( api.current + 1 );
+				equal(api.current, api.count - 1, "Out of bounds (total + 1) - looping disabled");
+			});
+
+			//
+			// user controls
+			//
+
+			module("User controls");
+
+			test("Next skip link (looping)", function()
+			{
+				api.to(0);
+				api.$next.trigger('click');
+				equal(api.current, 1, "From first to second slide");
+
+				// loop
+				$.extend(api.opts, { loop: true });
+
+				api.to( api.count - 1 );
+				api.$next.trigger('click');
+				equal(api.current, 0, "Attempt to go to from last to first slide - looping enabled");
+
+				// no loop
+				$.extend(api.opts, { loop: false });
+
+				api.to( api.count - 1 );
+				api.$next.trigger('click');
+				equal(api.current, api.count - 1, "Attempt to go to from last to first slide - looping disabled");
+			});
+
+			test("Previous skip link", function()
+			{
+				api.to( api.count - 1 );
+				api.$previous.trigger('click');
+				equal(api.current, api.count - 2, "From last to preceding slide");
+
+				// loop
+				$.extend(api.opts, { loop: true });
+
+				api.to(0);
+				api.$previous.trigger('click');
+				equal(api.current, api.count - 1, "Attempt to go to from first to last slide - looping enabled");
+
+				// no loop
+				$.extend(api.opts, { loop: false });
+
+				api.to(0);
+				api.$previous.trigger('click');
+				equal(api.current, 0, "Attempt to go to from first to last slide - looping disabled");
+			});
+
+			test("Pagination", function()
+			{
+				var $links = api.$pagination.find('a');
+
+				$links.eq(0).trigger('click');
+				equal(api.current, 0, "Go to first slide");
+
+				$links.eq( api.count - 1 ).trigger('click');
+				equal(api.current, api.count - 1, "Go to last slide");
+			});
+
+		});
+	</script>
+
+</body>
+</html>
