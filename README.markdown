@@ -1,5 +1,5 @@
 # jQuery Slideshow
-[jQuery Slideshow][1] is a performant and developer friendly slideshow/carousel plugin with support for touch gestures. 2KB when gzipped.
+[jQuery Slideshow][1] is a performant and developer friendly image slideshow and content carousel plugin with support for touch gestures. 2KB when gzipped.
 
 ## Dependencies
 
@@ -29,7 +29,7 @@ https://github.com/i-like-robots/jQuery-Slideshow/issues
 
 ## Versioning
 
-The current version is `1.5.2`. Releases will be numbered in following format:
+The current version is `1.6.0`. Releases will be numbered in following format:
 
 `<major>.<minor>.<patch>`
 

@@ -1,6 +1,6 @@
 /**
  * Author:      Matt Hinchliffe <www.maketea.co.uk>
- * Modified:    27/06/2012
+ * Modified:    03/11/2012
  * Description: Simple jQuery slideshow
  * Example:
  * <div class="slideshow">
@@ -13,6 +13,7 @@
 
 /* slides */
 .slideshow {
+	position:relative;
 	margin:0 0 1em;
 }
 	.slideshow a {
@@ -61,21 +62,21 @@
 
 /* skip */
 .slides-next,
-.slides-previous {
+.slides-prev {
 	position:absolute;
 	top:50%;
 	margin-top:-1em;
 	padding:0 .5em;
 	z-index:120;
 }
-	.slides-next {
-		right:0;
-	}
-	.slides-previous {
-		left:0;
-	}
-		.slides-next.disabled,
-		.slides-previous.disabled {
-			opacity:.5;
-			cursor:auto;
-		}
+.slides-next {
+	right:0;
+}
+.slides-prev {
+	left:0;
+}
+.slides-next.disabled,
+.slides-prev.disabled {
+	opacity:.5;
+	cursor:auto;
+}
