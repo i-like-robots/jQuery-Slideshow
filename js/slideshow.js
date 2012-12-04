@@ -1,7 +1,7 @@
 /*!
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    03/12/2012
+ * @modified    04/12/2012
  * @version     1.6.0b
  */
  (function( $, undefined ) {
@@ -41,13 +41,11 @@
 
     function Slides(target, options) {
 
-        this.target = target;
         this.$target = $(target);
         this.opts = $.extend({}, defaults, options, this.$target.data());
         this.$carousel = this.$target.children(this.opts.carousel);
         this.$items = this.$carousel.children(this.opts.items);
         this.count = this.$items.length;
-        this.current = -1;
 
         if ( this.count > 1 ) {
             this._init();
@@ -67,11 +65,8 @@
         // $wrapper is a document fragment, not the new DOM reference
         this.$wrapper = this.$carousel.wrap('<div style="position:relative;overflow:hidden;">').parent();
 
-        this.transition = this._transitions[this.opts.transition].call(this);
-
         // Create pagination
         if ( this.opts.pagination ) {
-
             this.$pagination = $('<ul class="slides-pagination">');
 
             for ( var i = 0, len = this.count; i < len; i++ ) {
@@ -83,10 +78,8 @@
 
         // Create skip links
         if ( this.opts.skip ) {
-
             this.$prev = $('<a href="#" class="slides-prev" data-slides="previous">' + this.opts.previousText + '</a>');
             this.$next = $('<a href="#" class="slides-next" data-slides="next">' + this.opts.nextText + '</a>');
-
             this.$target.append(this.$next, this.$prev);
         }
 
@@ -103,6 +96,8 @@
                 }
             });
         }
+
+        this.redraw();
 
         // Gestures - modified from Zepto.js <https://github.com/madrobby/zepto/blob/master/src/touch.js>
         // if ( this.opts.gestures && 'ontouchstart' in document.documentElement )
@@ -136,14 +131,11 @@
         //     }, false);
         // }
 
-        // Start
-        this.to(this.opts.offset - 1);
-
         // Autoplay
         if ( this.opts.auto ) {
             if ( this.opts.hoverPause ) {
                 this.$target.hover(function() {
-                    if (  ! self.stopped ) {
+                    if ( ! self.stopped ) {
                         self.pause();
                     }
                 }, function() {
@@ -159,12 +151,12 @@
 
     /**
      * On Complete
-     * @description Update controls and perform callbacks on transition end.
+     * @description Update controls and perform callbacks on transition complete.
      * @private
      */
     Slides.prototype._oncomplete = function() {
 
-        this.current = this.after;
+        this.current = this.future;
 
         // Highlight current item within pagination
         if ( this.opts.pagination ) {
@@ -253,10 +245,10 @@
 
         // Loop
         if ( x >= this.count ) {
-            x = this.opts.loop ? 0 : this.current;
+            x = this.opts.loop ? 0 : this.count - 1;
         }
         else if ( x < 0 ) {
-            x = this.opts.loop ? this.count - 1 : this.current;
+            x = this.opts.loop ? this.count - 1 : 0;
         }
 
         // Stop or reset autoplay
@@ -269,9 +261,9 @@
             }
         }
 
-        // Change slide
+        // Change slide if different or not yet run
         if ( x !== this.current ) {
-            this.after = x;
+            this.future = x;
             this.transition.execute.call(this);
 
             if ( this.opts.onupdate ) {
@@ -286,13 +278,17 @@
      */
     Slides.prototype.redraw = function( transition ) {
 
-        this.transition.teardown.call(this);
+        if ( this.transition ) {
+            this.transition.teardown.call(this);
+        }
 
         if ( transition ) {
             this.opts.transition = transition;
         }
 
-        this.transition = this._transitions[this.opts.transition].call(this);
+        this.current = undefined;
+        this.transition = Transitions[this.opts.transition].call(this);
+        this.to(this.opts.offset - 1);
     };
 
     /**
@@ -328,22 +324,23 @@
 
     /**
      * Transitions
-     * @description Transitions consist of 3 methods:
-     *  1. Setup: Code to setup styles and variables for the transition.
-     *  2. Execute: Code to perform the transition between 2 slides.
-     *  3. Teardown: Remove any styles and variables created by methods 1 and 2.
-     * @private
+     * @description Methods are called from a Slides instance. In theory this could be extended or replaced without
+     * affecting the slideshow core.
      */
-    Slides.prototype._transitions = {
+    var Transitions = {
 
         crossfade: function() {
-
             var self = this;
 
-            this.$items.css('display', 'none');
+            // Setup
+            this.$items
+                .filter(function(i) {
+                    return i !== (self.opts.offset - 1);
+                })
+                .css('display', 'none');
 
             this.execute = function() {
-                var $next = this.$items.eq(this.after),
+                var $next = this.$items.eq(this.future),
                     $current = this.$items.eq(this.current).css({
                         position: 'absolute',
                         left: 0,
@@ -368,9 +365,9 @@
 
         // Scroll
         scroll: function() {
-
             var self = this;
 
+            // Setup
             var slide = this.$items.css({
                 'float': 'left',
                 'width': this.opts.slideWidth
@@ -382,7 +379,7 @@
 
             this.execute = function() {
                 this.$wrapper.animate({
-                    scrollLeft: this.$items.eq(this.after).position().left + this.$wrapper.scrollLeft() // Scroll prevents redraws
+                    scrollLeft: this.$items.eq(this.future).position().left + this.$wrapper.scrollLeft() // Scroll prevents redraws
                 }, this.opts.speed, this.opts.easing, function() {
                     self._oncomplete.call(self);
                 });

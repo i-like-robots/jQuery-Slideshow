@@ -91,7 +91,7 @@
 				ok(api.count > 0, "Check slides are found");
 				ok(api.$pagination.length > 0, "Check pagination created");
 				ok(api.$next.length > 0, "Check next skip link created");
-				ok(api.$previous.length > 0, "Check previous skip link created");
+				ok(api.$prev.length > 0, "Check previous skip link created");
 			});
 
 			test("API", function()
@@ -211,21 +211,21 @@
 			test("Previous skip link", function()
 			{
 				api.to( api.count - 1 );
-				api.$previous.trigger('click');
+				api.$prev.trigger('click');
 				equal(api.current, api.count - 2, "From last to preceding slide");
 
 				// loop
 				$.extend(api.opts, { loop: true });
 
 				api.to(0);
-				api.$previous.trigger('click');
+				api.$prev.trigger('click');
 				equal(api.current, api.count - 1, "Attempt to go to from first to last slide - looping enabled");
 
 				// no loop
 				$.extend(api.opts, { loop: false });
 
 				api.to(0);
-				api.$previous.trigger('click');
+				api.$prev.trigger('click');
 				equal(api.current, 0, "Attempt to go to from first to last slide - looping disabled");
 			});
 
