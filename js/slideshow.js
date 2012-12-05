@@ -85,6 +85,7 @@
 
         // Controls
         if ( this.opts.pagination || this.opts.skip ) {
+
             this.$target.on('click.slides', '[data-slides]', function( e ) {
 
                 e.preventDefault();
@@ -227,7 +228,7 @@
      */
     Slides.prototype.to = function( x, user ) {
 
-        // Allow method while animating?
+        // Allow while animating?
         if ( this.opts.jumpQueue ) {
             this.$items.stop(true, true);
         }
@@ -241,6 +242,10 @@
         }
         else if ( x === 'previous' ) {
             x = this.current - 1;
+        }
+
+        if ( typeof x !== 'number' ) {
+            x = parseInt(x, 10);
         }
 
         // Loop
@@ -332,7 +337,6 @@
         crossfade: function() {
             var self = this;
 
-            // Setup
             this.$items
                 .filter(function(i) {
                     return i !== (self.opts.offset - 1);
@@ -367,19 +371,24 @@
         scroll: function() {
             var self = this;
 
-            // Setup
-            var slide = this.$items.css({
+            this.$items.css({
                 'float': 'left',
                 'width': this.opts.slideWidth
-            }).outerWidth(true);
+            });
 
-            this.$carousel.css('minWidth', slide * this.count); // setting width property does not work on iOS 4
+            this.$carousel.css({
+                'minWidth': this.$items.outerWidth(true) * this.count // setting width property does not work on iOS 4
+            });
+
             this.realcount = this.count;
             this.count -= this.opts.visible - 1;
 
             this.execute = function() {
+
+                var left = this.$items.eq(this.future).position().left + this.$wrapper.scrollLeft();
+
                 this.$wrapper.animate({
-                    scrollLeft: this.$items.eq(this.future).position().left + this.$wrapper.scrollLeft() // Scroll prevents redraws
+                    scrollLeft: left // Scroll prevents redraws
                 }, this.opts.speed, this.opts.easing, function() {
                     self._oncomplete.call(self);
                 });
