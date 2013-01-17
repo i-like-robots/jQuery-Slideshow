@@ -1,0 +1,30 @@
+{
+  "name": "slideshow",
+  "version": "1.6.0",
+  "title": "jQuery Slideshow",
+  "description": "jQuery Slideshow is a performant and developer friendly image slideshow and content carousel plugin with support for touch gestures. 2KB when gzipped.",
+  "keywords": [
+    "slideshow",
+    "carousel",
+    "slider",
+    "content",
+    "image"
+  ],
+  "author": {
+    "name": "Matt Hinchliffe",
+    "email": "matt+jquery@maketea.co.uk",
+    "url": "http://maketea.co.uk"
+  },
+  "licenses": [
+    {
+      "type": "CC BY-SA 3.0",
+      "url": "http://creativecommons.org/licenses/by-sa/3.0/"
+    }
+  ],
+  "bugs": "https://github.com/i-like-robots/jQuery-Slideshow/issues",
+  "homepage": "http://i-like-robots.github.com/jQuery-Slideshow/",
+  "demo": "http://i-like-robots.github.com/jQuery-Slideshow/",
+  "dependencies": {
+    "jquery": ">=1.7"
+  }
+}
