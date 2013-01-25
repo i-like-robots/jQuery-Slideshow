@@ -1,8 +1,8 @@
 /*!
  * @name        jQuery Slideshow
  * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    16/01/2013
- * @version     1.6.0
+ * @modified    25/01/2013
+ * @version     1.6.1
  */
  (function( $, undefined ) {
 
@@ -41,6 +41,7 @@
 
     function Slides(target, options) {
 
+        this.target = target;
         this.$target = $(target);
         this.opts = $.extend({}, defaults, options, this.$target.data());
         this.$carousel = this.$target.children(this.opts.carousel);
@@ -106,8 +107,6 @@
         //
         if ( this.opts.gestures && 'ontouchstart' in document.documentElement ) {
             this.target.addEventListener('touchstart', function( e ) {
-                e.preventDefault();
-
                 self.t = {
                     x1: e.touches[0].pageX,
                     el: e.touches[0].target,
@@ -118,6 +117,7 @@
             this.target.addEventListener('touchmove', function( e ) {
                 self.t.x2 = e.touches[0].pageX;
                 self.t.dif = Math.abs(self.t.x1 - self.t.x2);
+                e.preventDefault();
             }, false);
 
             this.target.addEventListener('touchend', function() {

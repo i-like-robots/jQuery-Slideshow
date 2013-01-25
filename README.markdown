@@ -29,7 +29,7 @@ https://github.com/i-like-robots/jQuery-Slideshow/issues
 
 ## Versioning
 
-The current version is `1.6.0`. Releases will be numbered in following format:
+The current version is `1.6.1`. Releases will be numbered in following format:
 
 `<major>.<minor>.<patch>`
 
