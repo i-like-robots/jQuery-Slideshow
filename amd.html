@@ -11,6 +11,9 @@
 	<link rel="stylesheet" href="css/pygments.css" />
 	<link rel="stylesheet" href="css/slideshow.css" />
 
+	<script src="http://raw.github.com/cujojs/curl/master/dist/curl/curl.js"></script>
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
 	<!--
 	jQuery Slideshow by Matt Hinchliffe <http://www.maketea.co.uk>
 	Find out more at GitHub <http://github.com/i-like-robots/jQuery-Slideshow>
@@ -124,177 +127,20 @@
 
 		</section>
 
-		<hr />
-
-		<section id="options">
-			<h2>Options</h2>
-			<p>
-				Global options can be specified via the standard jQuery plugin interface or as data attributes on
-				individual slideshow elements.
-			</p>
-
-			<figure>
-<pre class="syntax"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"slideshow"</span>
-    <span class="na">data-pagination=</span><span class="s">"true"</span>
-    <span class="na">data-loop=</span><span class="s">"false"</span>
-    <span class="na">data-transition=</span><span class="s">"crossfade"</span><span class="nt">&gt;</span></code>
-</pre>
-			</figure>
-
-			<h3>Setup</h3>
-			<dl id="options-setup">
-				<dt>carousel</dt>
-				<dd>
-					Selector for the carousel element. Default: <code>".carousel"</code>.
-				</dd>
-				<dt>items</dt>
-				<dd>
-					Selector for carousel items. Default: <code>".slide"</code>.
-				</dd>
-				<dt>slideWidth</dt>
-				<dd>
-					Set a fixed width for each slide. Default: <code>false</code>.
-				</dd>
-				<dt>jumpQueue</dt>
-				<dd>
-					Allow .to() method while animations are queued. Default: <code>true</code>.
-				</dd>
-				<dt>offset</dt>
-				<dd>
-					Starting slide. Default: <code>1</code>.
-				</dd>
-			</dl>
-
-			<h3>Controls</h3>
-			<dl id="options-controls">
-				<dt>skip</dt>
-				<dd>
-					Render next/previous skip buttons. Default: <code>true</code>.
-				</dd>
-				<dt>pagination</dt>
-				<dd>
-					Render pagination. Default: <code>true</code>.
-				</dd>
-				<dt>gestures</dt>
-				<dd>
-					Allow touch swipe events to control previous/next. Default: <code>false</code>.
-				</dd>
-				<dt>auto</dt>
-				<dd>
-					Autoplay timeout in milliseconds. Set to a falsy value for no autoplay. Default: <code>6000</code>.
-				</dd>
-				<dt>autostop</dt>
-				<dd>
-					Stop autoplay when user manually changes slide. Default: <code>true</code>.
-				</dd>
-				<dt>hoverPause</dt>
-				<dd>
-					Pause autoplay on hover. Default: <code>false</code>.
-				</dd>
-				<dt>loop</dt>
-				<dd>
-					Allow slideshow to loop. Default: <code>false</code>.
-				</dd>
-				<dt>nextText</dt>
-				<dd>
-					Text to display on next skip button. Default: <code>"Next"</code>.
-				</dd>
-				<dt>previousText</dt>
-				<dd>
-					Text to display on previous skip button. Default: <code>"Previous"</code>.
-				</dd>
-			</dl>
-
-			<h3>Transitions</h3>
-			<dl id="options-transitions">
-				<dt>transition</dt>
-				<dd>
-					Specify transition. Default: <code>"scroll"</code>.
-				</dd>
-				<dt>speed</dt>
-				<dd>
-					Animation speed between slides in milliseconds. Default: <code>600</code>.
-				</dd>
-				<dt>easing</dt>
-				<dd>
-					Animation easing between slides. Default: <code>"swing"</code>.
-				</dd>
-				<dt>visible</dt>
-				<dd>
-					Number of slides visible when scrolling. Default: <code>1</code>.
-				</dd>
-			</dl>
-
-			<h3>Callbacks</h3>
-			<dl id="options-callbacks">
-				<dt>onupdate</dt>
-				<dd>
-					A callback function to execute on slide change. Default: <code>false</code>.
-				</dd>
-				<dt>oncomplete</dt>
-				<dd>
-					A callback function to execute on slide transition complete. Default: <code>false</code>.
-				</dd>
-			</dl>
-		</section>
-
-		<hr />
-
-		<section id="api">
-			<h2>Public methods</h2>
-			<dl>
-				<dt>.hasNext()</dt>
-				<dd>
-					Are there any slides after current item (ignores loop). Returns <code>boolean</code>.
-				</dd>
-				<dt>.hasPrevious()</dt>
-				<dd>
-					Are there any slides previous to current item (ignores loop). Returns <code>boolean</code>.
-				</dd>
-				<dt>.next()</dt>
-				<dd>
-					Go to the next slide.
-				</dd>
-				<dt>.previous()</dt>
-				<dd>
-					Go to previous slide.
-				</dd>
-				<dt>.to(index)</dt>
-				<dd>
-					Go to slide. <var>Index</var> Slide position.
-				</dd>
-				<dt>.redraw([transition])</dt>
-				<dd>
-					Redraw the carousel. <var>Transition</var> New transition style.
-				</dd>
-				<dt>.play()</dt>
-				<dd>
-					Start autoplay.
-				</dd>
-				<dt>.pause()</dt>
-				<dd>
-					Pause autoplay.
-				</dd>
-				<dt>.stop()</dt>
-				<dd>
-					Stop autoplay entirely.
-				</dd>
-			</dl>
-		</section>
-
 	</div>
 
 	<a href="http://github.com/i-like-robots/jQuery-Slideshow">
 		<img style="position:absolute; top:0; right:0; border:0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
 	</a>
 
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script src="dist/slideshow.min.js"></script>
 	<script>
-		$(function()
-		{
-			// Create slideshow instances
-			var $s = $('.slideshow').slides();
+		curl(['src/slideshow'], function(Module) {
+
+			console.log(Module);
+
+			var $s = $('.slideshow').each(function(i, el) {
+				$.data(el, 'slides', new Module(el));
+			});
 
 			// Access an instance API
 			var api = $s.eq(0).data('slides');
@@ -304,14 +150,8 @@
 			{
 				api.redraw( this.value );
 			});
-		});
-	</script>
 
-	<script>
-		var _gaq=[['_setAccount','UA-2508361-10'],['_trackPageview']];
-		(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-		g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-		s.parentNode.insertBefore(g,s)}(document,'script'));
+		});
 	</script>
 
 </body>

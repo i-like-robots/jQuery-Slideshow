@@ -1,10 +1,4 @@
-/*!
- * @name        jQuery Slideshow
- * @author      Matt Hinchliffe <https://github.com/i-like-robots/jQuery-Slideshow>
- * @modified    25/01/2013
- * @version     1.6.1
- */
- (function( $, undefined ) {
+(function( $, undefined ) {
 
     'use strict';
 
@@ -407,5 +401,15 @@
             }
         });
     };
+
+    // AMD and CommonJS module compatibility
+    if ( typeof define === 'function' && define.amd ){
+        define(function() {
+            return Slides;
+        });
+    }
+    else if ( typeof module !== 'undefined' && module.exports ) {
+        module.exports = Slides;
+    }
 
 })(jQuery);
