@@ -9,17 +9,11 @@ jQuery 1.7+
 
  * Firefox and Firefox Mobile
  * Chrome
- * Safari 5.1
- * Internet Explorer 7–9
+ * Safari 5
+ * Internet Explorer 7–10
  * Opera 11 and Opera Mobile
  * iOS 4, 5 and 6
- * Android 2.3, 4.1
-
-## Sites that use jQuery Slideshow
-
- * [Rolls-Royce](http://www.rolls-royce.com)
- * [Hobbs](http://www.hobbs.co.uk)
- * [Care Conversation](http://www.careconversation.com)
+ * Android 2.3, 4.2
 
 ## Issues
 
@@ -29,7 +23,7 @@ https://github.com/i-like-robots/jQuery-Slideshow/issues
 
 ## Versioning
 
-The current version is `1.6.1`. Releases will be numbered in following format:
+The current version is `1.6.2`. Releases will be numbered in following format:
 
 `<major>.<minor>.<patch>`
 
