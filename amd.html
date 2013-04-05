@@ -134,9 +134,7 @@
 	</a>
 
 	<script>
-		curl(['src/slideshow'], function(Module) {
-
-			console.log(Module);
+		curl(['dist/slideshow'], function(Module) {
 
 			var $s = $('.slideshow').each(function(i, el) {
 				$.data(el, 'slides', new Module(el));
