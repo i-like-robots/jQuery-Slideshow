@@ -152,7 +152,7 @@
         if ( this.opts.pagination ) {
             this.$pagination.children()
                 .removeClass('selected')
-                .eq(this.current)
+                .slice(this.current, this.current + this.opts.visible)
                 .addClass('selected');
         }
 
