@@ -281,7 +281,7 @@
         }
 
         this.current = undefined;
-        this.transition = Transitions[this.opts.transition].call(this);
+        this.transition = this.transitions[this.opts.transition].call(this);
         this.to(this.opts.offset - 1);
     };
 
@@ -318,10 +318,8 @@
 
     /**
      * Transitions
-     * @description Methods are called from a Slides instance. In theory this could be extended or replaced without
-     * affecting the slideshow core.
      */
-    var Transitions = {
+    Slides.prototype.transitions = {
 
         crossfade: function() {
             var self = this;
@@ -365,15 +363,20 @@
                 'width': this.opts.slideWidth
             });
 
+            var carouselWidth = 0;
+
+            for (var i = 0; i < this.count; i++) {
+                carouselWidth+= this.$items.eq(i).outerWidth(true);
+            }
+
             this.$carousel.css({
-                'minWidth': this.$items.outerWidth(true) * this.count // setting width property does not work on iOS 4
+                'minWidth': carouselWidth // setting width property does not work on iOS 4
             });
 
             this.realcount = this.count;
             this.count -= this.opts.visible - 1;
 
             this.execute = function() {
-
                 var left = this.$items.eq(this.future).position().left + this.$wrapper.scrollLeft();
 
                 this.$wrapper.animate({
