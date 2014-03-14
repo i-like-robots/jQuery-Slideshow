@@ -32,11 +32,10 @@
 		<section id="introduction">
 			<h1>jQuery Slideshow</h1>
 			<p>
-				<a href="http://github.com/i-like-robots/jQuery-Slideshow">jQuery Slideshow</a> is a performant and
-				developer friendly image slideshow and content carousel plugin with support for touch gestures. 2KB when
+				<a href="http://github.com/i-like-robots/jQuery-Slideshow">jQuery Slideshow</a> is a performant,
+				flexible and developer friendly image slideshow and content carousel plugin. 2KB when
 				gzipped. <a href="https://github.com/i-like-robots/jQuery-Slideshow/zipball/master">Download</a>.
 			</p>
-
 
 			<div id="example">
 
@@ -62,7 +61,7 @@
 					</select>
 				</p>
 
-				<div class="slideshow" data-visible="4" data-pagination="false" data-offset="3">
+				<div class="slideshow" data-visible="4" data-pagination="false">
 					<ul class="carousel">
 						<li class="slide">
 							<img src="http://placebox.es/110/110/d97ef2/f5f5f5" alt="" width="110" height="110" />
@@ -102,8 +101,9 @@
 		<section id="setup">
 			<h2>Setup</h2>
 			<p>
-				Setup is not restricted to a fixed markup pattern but is dependent on class names. Theoretically almost
-				any content can be placed within a slide. If you are using images always specify the width and height.
+				Setup is not restricted to a fixed markup pattern. Theoretically almost any content can be placed
+				within a slide. If you are using images you should always specify the width and height attributes
+				so that layout calculations can be done without waiting for the assets to finish downloading.
 			</p>
 
 			<figure>
@@ -138,7 +138,9 @@
 			<h2>Options</h2>
 			<p>
 				Global options can be specified via the standard jQuery plugin interface or as data attributes on
-				individual slideshow elements.
+				individual slideshow elements. Remember that <kbd>camelCase</kbd> options should be written as
+				<kbd>hyphen-separated</kbd> attributes, for example the <code>hoverPause</code> option would be defined
+				on the element with the <code>data-hover-pause</code> attribute.
 			</p>
 
 			<figure>
@@ -183,10 +185,6 @@
 				<dd>
 					Render pagination. Default: <code>true</code>.
 				</dd>
-				<dt>gestures</dt>
-				<dd>
-					Allow touch swipe events to control previous/next. Default: <code>false</code>.
-				</dd>
 				<dt>auto</dt>
 				<dd>
 					Autoplay timeout in milliseconds. Set to a falsy value for no autoplay. Default: <code>6000</code>.
@@ -229,7 +227,7 @@
 				</dd>
 				<dt>visible</dt>
 				<dd>
-					Number of slides visible when scrolling. Default: <code>1</code>.
+					Approximate number of slides visible (scroll transition only). Default: <code>1</code>.
 				</dd>
 			</dl>
 
@@ -253,7 +251,7 @@
 			<dl>
 				<dt>.hasNext()</dt>
 				<dd>
-					Are there any slides after current item (ignores loop). Returns <code>boolean</code>.
+					Are there any slides after current item or can the carousel be scrolled any further (ignores loop). Returns <code>boolean</code>.
 				</dd>
 				<dt>.hasPrevious()</dt>
 				<dd>
@@ -296,11 +294,10 @@
 		<img style="position:absolute; top:0; right:0; border:0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
 	</a>
 
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="dist/slideshow.js"></script>
 	<script>
-		$(function()
-		{
+		$(function() {
 			// Create slideshow instances
 			var $s = $('.slideshow').slides();
 
@@ -308,8 +305,7 @@
 			var api = $s.eq(0).data('slides');
 
 			// Transition select
-			$('select[name=transition]').on('change', function()
-			{
+			$('select[name=transition]').on('change', function() {
 				api.redraw( this.value );
 			});
 		});

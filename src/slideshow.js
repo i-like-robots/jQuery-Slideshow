@@ -25,7 +25,7 @@
         transition: 'scroll',       // Specify transition.
         speed: 600,                 // Animation speed between slides in milliseconds.
         easing: 'swing',            // Animation easing between slides.
-        visible: 1,                 // Number of slides visible when scrolling.
+        visible: 1,                 // Approximate number of slides visible (scroll transition only).
 
         // Callbacks
         onupdate: false,            // A callback function to execute on slide change.
@@ -150,7 +150,7 @@
 
     /**
      * Has next
-     * @description Are there any slides after current item (ignores loop).
+     * @description Are there any slides after current item or can the carousel be scrolled any further (ignores loop).
      * @returns {boolean}
      */
     Slides.prototype.hasNext = function() {
