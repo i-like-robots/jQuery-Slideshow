@@ -14,7 +14,6 @@
         // Controls
         skip: true,                 // Render next/previous skip buttons.
         pagination: true,           // Render pagination.
-        gestures: false,            // Allow touch swipe events to control previous/next.
         auto: 6000,                 // Autoplay timeout in milliseconds. Set to false for no autoplay.
         autostop: true,             // Stop autoplay when user manually changes slide.
         hoverPause: false,          // Pause autoplay on hover.
@@ -91,32 +90,6 @@
         }
 
         this.redraw();
-
-        //
-        // Gestures modified from Zepto.js <https://github.com/madrobby/zepto/blob/master/src/touch.js>
-        // This will be buggy on iOS6 but you can try and work around it: <https://gist.github.com/3755461>
-        //
-        if ( this.opts.gestures && 'ontouchstart' in document.documentElement ) {
-            this.target.addEventListener('touchstart', function( e ) {
-                self.t = {
-                    x1: e.touches[0].pageX,
-                    el: e.touches[0].target,
-                    dif: 0
-                };
-            }, false);
-
-            this.target.addEventListener('touchmove', function( e ) {
-                self.t.x2 = e.touches[0].pageX;
-                self.t.dif = Math.abs(self.t.x1 - self.t.x2);
-                e.preventDefault();
-            }, false);
-
-            this.target.addEventListener('touchend', function() {
-                if (  self.t.x2 > 0 && self.t.dif > 30  ) {
-                    self.to( self.t.x1 - self.t.x2 > 0 ? 'next' : 'previous' , true);
-                }
-            }, false);
-        }
 
         // Autoplay
         if ( this.opts.auto ) {
