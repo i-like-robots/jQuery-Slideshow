@@ -1,6 +1,6 @@
 {
     "name": "slideshow",
-    "version": "1.7.0-dev",
+    "version": "1.7.0",
     "title": "jQuery Slideshow",
     "description": "jQuery Slideshow is a performant and developer friendly image slideshow and content carousel plugin with support for touch gestures. 2KB when gzipped.",
     "keywords": [
