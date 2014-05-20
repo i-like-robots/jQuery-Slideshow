@@ -28,8 +28,8 @@
         visible: 1,                 // Approximate number of slides visible (scroll transition only).
 
         // Callbacks
-        onupdate: false,            // A callback function to execute on slide change.
-        oncomplete: false           // A callback function to execute on slide transition complete.
+        onupdate: null,             // A callback function to execute on slide change.
+        oncomplete: null            // A callback function to execute on slide transition complete.
     };
 
     function Slides(target, options) {
@@ -115,6 +115,7 @@
      * @private
      */
     Slides.prototype._oncomplete = function() {
+        var lastIndex = this.current;
 
         this.current = this.future;
 
@@ -144,7 +145,21 @@
         }
 
         if ( this.opts.oncomplete ) {
-            this.opts.oncomplete.call(this, this.current);
+            this._handleCallback(this.opts.oncomplete, [this.current, lastIndex]);
+        }
+    };
+
+    /**
+     * Handle callback
+     * @param {function|string} callback
+     * @param {any} data
+     * @private
+     */
+    Slides.prototype._handleCallback = function(callback, data) {
+        callback = typeof callback === "string" ? window[callback] : callback;
+
+        if (callback.call) {
+            callback.apply(this, data);
         }
     };
 
@@ -232,7 +247,7 @@
             this.transition.execute.call(this);
 
             if ( this.opts.onupdate ) {
-                this.opts.onupdate.call(this, x);
+                this._handleCallback(this.opts.onupdate, [x]);
             }
         }
     };

@@ -61,7 +61,7 @@
 	</section>
 
 
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="../src/slideshow.js"></script>
 	<script src="qunit-1.10.0.js"></script>
 
@@ -179,6 +179,38 @@
 
 				api.redraw("scroll");
 				equal(api.opts.transition, "scroll", "Test scroll registered");
+			});
+
+			//
+			// callbacks
+			//
+			test("Callbacks", function()
+			{
+				var oncomplete = false;
+				var onupdate = false;
+
+				api.to(0);
+
+				api.opts.oncomplete = function() {
+					equal(arguments[0], 1, "oncomplete callback receives current slide index");
+					equal(arguments[1], 0, "oncomplete callback receives previous slide index");
+					oncomplete = true;
+				};
+
+				api.opts.onupdate = "onupdate";
+
+				window.onupdate = function() {
+					equal(arguments[0], 1, "onupdate callback receives next slide index");
+					onupdate = true;
+				};
+
+				api.to(1);
+
+				equal(oncomplete, true, "oncomplete callback called");
+				equal(onupdate, true, "onupdate callback called");
+
+				api.opts.oncomplete = null;
+				api.opts.onupdate = null;
 			});
 
 			//
