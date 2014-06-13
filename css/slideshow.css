@@ -1,6 +1,6 @@
 /**
  * Author:      Matt Hinchliffe <www.maketea.co.uk>
- * Modified:    03/11/2012
+ * Modified:    13/06/2014
  * Description: Simple jQuery slideshow
  * Example:
  * <div class="slideshow">
@@ -15,30 +15,35 @@
 .slideshow {
 	position:relative;
 	margin:0 0 1em;
+	direction:ltr;
 }
-	.slideshow a {
-		font-size:.75em;
-		line-height:2em;
-		text-decoration:none;
-		color:#fff;
-		background:#666;
-	}
-		.slideshow a:hover,
-		.slideshow .selected a {
-			background-color:#333;
-		}
 
-	.carousel {
-		margin:0;
-		padding:0;
-		list-style:none;
-	}
-		.slide {
-			z-index:100;
-		}
-			.slide img {
-				display:block;
-			}
+.slideshow a {
+	font-size:.75em;
+	line-height:2em;
+	text-decoration:none;
+	color:#fff;
+	background:#666;
+}
+
+.slideshow a:hover,
+.slideshow .selected a {
+	background-color:#333;
+}
+
+.carousel {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+
+.slide {
+	z-index:100;
+}
+
+.slide img {
+	display:block;
+}
 
 /* pagination */
 .slides-pagination {
@@ -50,15 +55,17 @@
 	list-style:none;
 	z-index:110;
 }
-	.slides-pagination li {
-		display:inline;
-	}
-		.slides-pagination a {
-			display:block;
-			float:left;
-			width:2em;
-			margin-right:5px;
-		}
+
+.slides-pagination li {
+	display:inline;
+}
+
+.slides-pagination a {
+	display:block;
+	float:left;
+	width:2em;
+	margin-right:5px;
+}
 
 /* skip */
 .slides-next,
@@ -69,12 +76,15 @@
 	padding:0 .5em;
 	z-index:120;
 }
+
 .slides-next {
 	right:0;
 }
+
 .slides-prev {
 	left:0;
 }
+
 .slides-next.disabled,
 .slides-prev.disabled {
 	opacity:.5;
